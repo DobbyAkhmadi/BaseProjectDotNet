@@ -1,0 +1,2 @@
+# BaseProjectDotNet
+monolith
