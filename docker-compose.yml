@@ -1,0 +1,23 @@
+﻿services:
+  BaseProjectDotnet:
+    image: sampledatadummy
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+  mssql-2022:
+    container_name: db-sql-server
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: always
+    environment:
+      MSSQL_DATA_DIR: /var/opt/mssql/data
+      ACCEPT_EULA: "Y"
+      MSSQL_TCP_PORT: 1433
+      SA_PASSWORD: "asdf1234A"
+    ports:
+      - "14333:14333"
+    volumes:
+      - ./Docker/data:/var/opt/mssql/data
+      - ./Docker/log:/var/opt/mssql/log
+      - ./Docker/secrets:/var/opt/mssql/secrets
+      - ./Docker/backup:/var/opt/mssql/backup
