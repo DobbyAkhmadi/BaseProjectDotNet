@@ -7,6 +7,7 @@ builder.Services.AddScoped<BaseProjectDotnet.Helpers.Database.DatabaseContext>()
 builder.Services.AddScoped<IPersonService, PersonServiceData>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpContextAccessor();
 // Build the application
 var app = builder.Build();
 
@@ -16,7 +17,7 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage(); // Show detailed exception information in development
 }
 else
-{ 
+{
     app.UseExceptionHandler("/Home/Error"); // Custom error handling in production
     app.UseHsts(); // Default HSTS value is 30 days. Consider changing for production scenarios, see https://aka.ms/aspnetcore-hsts
 }

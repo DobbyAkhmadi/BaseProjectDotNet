@@ -1,0 +1,28 @@
+<div id="page-content" data-controller="@ViewContext.RouteData.Values["controller"]?.ToString()" data-action="@ViewContext.RouteData.Values["action"]?.ToString()">
+  <div class="header sticky-element">
+    <div class="content-header">
+      <div class="content-header-left">
+        <div class="breadcrumbs-top">
+          <div class="breadcrumb-wrapper">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a class="pjax" href="">
+                  <i class="icon ion-home"></i>
+                </a>
+              </li>
+              <li class="breadcrumb-item">Master</li>
+              <li class="breadcrumb-item">
+                <a href="">Channel SPBE</a>
+              </li>
+              <li class="breadcrumb-item active">Detail</li>
+            </ol>
+          </div>
+        </div>
+        <h3 class="content-header-title mb-0">
+          <a href=""><i class="ion-android-arrow-back mr-2"></i>Channel</a>
+        </h3>
+      </div>
+    </div>
+  </div>
+  <div flashes id="message"></div>
+</div>

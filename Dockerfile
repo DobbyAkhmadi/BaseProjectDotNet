@@ -1,23 +1,27 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+# Use the .NET 8 SDK image for building the application
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+WORKDIR /BaseProjectDotnet
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["BaseProjectDotnet.csproj", "./"]
-RUN dotnet restore "BaseProjectDotnet.csproj"
-COPY . .
-WORKDIR "/src/"
-RUN dotnet build "BaseProjectDotnet.csproj" -c $BUILD_CONFIGURATION -o /app/build
+# Copy everything
+COPY . ./
+# Restore as distinct layers
+RUN dotnet restore
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "BaseProjectDotnet.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Copy the entire project and build
+RUN dotnet publish -c Release -o out
 
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "BaseProjectDotnet.dll"]
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /AspnetCoreMvcStarter
+COPY --from=build-env /AspnetCoreMvcStarter/out .
+
+# Expose port 5050 for the application
+EXPOSE 80
+
+# Set the entry point for the container
+ENTRYPOINT ["dotnet", "AspnetCoreMvcStarter.dll"]
+
+# Display a message in the terminal during build
+RUN echo  -----------------------------------------------
+RUN echo  Application is running at http://localhost:8080
+RUN echo  -----------------------------------------------

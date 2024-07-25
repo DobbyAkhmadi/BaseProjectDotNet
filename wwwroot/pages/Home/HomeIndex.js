@@ -1,13 +1,36 @@
 let datatable;
-$(document).ready(function () {
-    alert("x")
-    datatable = new DataTable('#dataTable');
-    datatable = $('#dataTable').DataTable({
-        pageLength: 10,  // Number of rows per page
-        lengthMenu: [10, 25, 50, 100], // Options for rows per page
-    });
+$(document).ready(async function () {
+
+  datatable = $('#dataTable').DataTable({
+    buttons: [],
+    pageLength: 10,  // Number of rows per page
+    lengthMenu: [10, 25, 50, 100], // Options for rows per page
+  });
+
+  // let url = 'localhost';
+  // let form = {}
+  //
+  // await RequestAsync('POST', url, 'json', form, async function (response) {
+  //   console.log(response)
+  // }, true, true);
+
+  startLoading()
+  var data=  generateRandomData(100000);
+  datatable.rows.add(data).draw();
+  endLoading()
+
+
+
 
 });
+
+$("#btn-click").on("click",async function () {
+
+  showToast("success","success bos!",null)
+
+
+});
+
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const getRandomItem = (arr) => arr[getRandomInt(0, arr.length - 1)];
@@ -29,22 +52,22 @@ const generateRandomData = (numRows) => {
     }
     return data;
 };
-$("#generateButton").on('click', function () {
-    const data = generateRandomData(1000);
-    datatable.rows.add(data).draw();
-});
-
-$("#submitButton").on('click', function () {
-    let url = "person/save";
-    let form = {
-        persons :  arrayTable()
-    }
-
-    requestAjaxAsync('POST', url, 'formData', form, async function (response) {
-        console.log(response)
-    });
-});
-
+// $("#generateButton").on('click', function () {
+//     const data = generateRandomData(1000);
+//     datatable.rows.add(data).draw();
+// });
+//
+// $("#submitButton").on('click', function () {
+//     let url = "person/save";
+//     let form = {
+//         persons :  arrayTable()
+//     }
+//
+//     RequestAsync('POST', url, 'formData', form, async function (response) {
+//         console.log(response)
+//     });
+// });
+//
 function arrayTable() {
     const tableData = [];
     const rows = document.querySelectorAll('#dataTable tbody tr');

@@ -1,6 +1,6 @@
 ﻿services:
   BaseProjectDotnet:
-    image: sampledatadummy
+    image: BaseProjectDotnet
     build:
       context: .
       dockerfile: Dockerfile
@@ -15,7 +15,7 @@
       MSSQL_TCP_PORT: 1433
       SA_PASSWORD: "asdf1234A"
     ports:
-      - "14333:14333"
+      - "1433:1433"
     volumes:
       - ./Docker/data:/var/opt/mssql/data
       - ./Docker/log:/var/opt/mssql/log

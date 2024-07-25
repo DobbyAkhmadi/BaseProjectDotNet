@@ -6,7 +6,7 @@ public class DatabaseContext
 {
     private string Connection1 { get; }
 
-    public DatabaseContext(IConfiguration configuration, string dbConfigName = "Database")
+    public DatabaseContext(IConfiguration configuration, string dbConfigName = "ConnectionStrings")
     {
         var database = new DatabaseConnection();
         configuration.Bind(dbConfigName, database);
