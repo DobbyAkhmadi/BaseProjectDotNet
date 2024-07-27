@@ -38,11 +38,11 @@ $(document).ready(function () {
           'render': function (data, type, item, meta) {
             console.log(item)
             let action = '<div class="action">';
-              action += '<a title="Detail" class="btn btn-icon btn-text-secondary  waves-effect waves-light rounded-pill"><i class="ti ti-eye ti-md"></i></a>';
-              action += '<a title="Edit" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-pencil ti-md"></i></a>';
-              action += '<a title="Delete" class="btn btn-icon btn-text-danger waves-effect waves-light rounded-pill"><i class="ti ti-trash ti-md"></i></a>';
-              action += '<a title="Restore" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-restore ti-md"></i></a>';
-              action += '</div>';
+            action += '<a title="Detail" class="btn btn-icon btn-text-secondary  waves-effect waves-light rounded-pill"><i class="ti ti-eye ti-md"></i></a>';
+            action += '<a title="Edit" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-pencil ti-md"></i></a>';
+            action += '<a title="Delete" class="btn btn-icon btn-text-danger waves-effect waves-light rounded-pill"><i class="ti ti-trash ti-md"></i></a>';
+            action += '<a title="Restore" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-restore ti-md"></i></a>';
+            action += '</div>';
             return action;
           }
         }
@@ -52,7 +52,24 @@ $(document).ready(function () {
         {responsivePriority: 2, targets: -1}
       ],
       // add button
-      dom: '<"card-header flex-column flex-md-row"<"head-label text-center"><"dt-action-buttons text-end pt-3 pt-md-0"B>><"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+      dom:
+        '<"row"' +
+          '<"col-md-2"<"ms-n2"l>>' +
+          '<"col-md-10"<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-6 mb-md-0 mt-n6 mt-md-0"fB>>' +
+          '>t' +
+        '<"row"' +
+          '<"col-sm-12 col-md-6"i>' +
+          '<"col-sm-12 col-md-6"p>' +
+        '>',
+      language: {
+        sLengthMenu: '_MENU_',
+        search: '',
+        searchPlaceholder: 'Search User',
+        paginate: {
+          next: '<i class="ti ti-chevron-right ti-sm"></i>',
+          previous: '<i class="ti ti-chevron-left ti-sm"></i>'
+        }
+      },
       displayLength: 10,
       lengthMenu: [10, 25, 50, 75, 100],
       // Buttons with Dropdown
@@ -195,14 +212,14 @@ $(document).ready(function () {
   }
 });
 
-$(document).on("click",".create-new",function (){
+$(document).on("click", ".create-new", function () {
   alert("clicked")
 });
 
 $("#btn-click").on("click", async function () {
-  let form ={
-    Success :true,
-    Message : "xxxxxxx"
+  let form = {
+    Success: true,
+    Message: "xxxxxxx"
   }
   confirm = function () {
     showToast(form)
