@@ -1,2 +1,22 @@
-
-<h4 class="py-4 mb-6">Page Audit</h4>
+<div class="col-md-12">
+  <div class="card card-header bg-menu-theme sticky element-collapse">
+    <div class="header-container">
+      <div class="header-page">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a class="pjax" href="">
+                <i class="icon menu-icon ti ti-home"></i>
+              </a>
+            </li>
+            <li class="breadcrumb-item">Audit</li>
+            <li class="breadcrumb-item active">Audit Trail</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <div class="card card-body">
+    @await Html.PartialAsync("~/Views/Audit/Detail.cshtml")
+  </div>
+</div>

@@ -895,11 +895,9 @@
       <_ContentIncludedByDefault Remove="wwwroot\libs\typeahead-js\typeahead.scss" />
       <_ContentIncludedByDefault Remove="wwwroot\libs\typeahead-js\_mixins.scss" />
       <_ContentIncludedByDefault Remove="wwwroot\libs\_tabler\_tabler.scss" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Views\Authentication\" />
-      <Folder Include="Views\Home\Modals\" />
+      <_ContentIncludedByDefault Remove="Views\_Partials\_Macros.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Home\Form\Form.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Home\Form\View.cshtml" />
     </ItemGroup>
 
 </Project>

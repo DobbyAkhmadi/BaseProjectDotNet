@@ -1,0 +1,107 @@
+﻿<div class="col-md-12">
+  <div class="card card-action bg-menu-theme mb-6 card-border-shadow-primary">
+
+    <div class="card-header">
+      <h5 class="card-action-title mb-0 "><span class="icon-card ti ti-search"></span> Advanced Search</h5>
+      <div class="card-action-element">
+        <ul class="list-inline mb-0">
+          <li class="list-inline-item ">
+            <a href="javascript:void(0);" class="card-collapsible">
+              <i class="tf-icons ti ti-chevron-down scaleX-n1-rtl ti-sm"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="adv-collapse" class="collapse">
+      <div class="card-body">
+        <form id="adv-search-index" class="row col-12">
+          <div class="col-4">
+            <div class="row form-group">
+              <div class="mb-3">
+                <label for="TypeTransport" class="form-label">Test</label>
+                <select id="TypeTransport" class="form-select">
+                  <option></option>
+                  <option id="1">Test 1</option>
+                  <option id="2">Test 2</option>
+                </select>
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="mb-3">
+                <label for="defaultFormControlInput" class="form-label">Name</label>
+                <input type="text" class="form-control" id="defaultFormControlInput" placeholder="John Doe" aria-describedby="defaultFormControlHelp"/>
+                <div id="defaultFormControlHelp" class="form-text"></div>
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="mb-3">
+                <button type="button" class="btn btn-primary me-2">
+                  <span class="tf-icons ti-xs ti ti-search me-2"></span> Submit
+                </button>
+                <button type="button" class="btn btn-secondary me-2">
+                  <span class="tf-icons ti-xs ti ti-arrow-back me-2"></span> Clear
+                </button>
+                </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="row form-group">
+              <div class="mb-3">
+                <label for="defaultFormControlInput" class="form-label">Name</label>
+                <input type="text" class="form-control" id="defaultFormControlInput" placeholder="John Doe" aria-describedby="defaultFormControlHelp"/>
+                <div id="defaultFormControlHelp" class="form-text"></div>
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="mb-3">
+                <label for="defaultFormControlInput" class="form-label">Name</label>
+                <input type="text" class="form-control" id="defaultFormControlInput" placeholder="John Doe" aria-describedby="defaultFormControlHelp"/>
+                <div id="defaultFormControlHelp" class="form-text"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="row form-group">
+              <div class="mb-3">
+                <label for="defaultFormControlInput" class="form-label">Name</label>
+                <input type="text" class="form-control" id="defaultFormControlInput" placeholder="John Doe" aria-describedby="defaultFormControlHelp"/>
+                <div id="defaultFormControlHelp" class="form-text"></div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="alert alert-success" role="alert">
+    This is a success alert — check it out!
+  </div>
+
+  <div class="card-datatable table-responsive pt-0">
+    <table class="datatables-basic table display compact" style="width:100%" id="dataTable">
+      <thead>
+      <tr>
+        <th>User</th>
+        <th>Roles Name</th>
+        <th>Action Name</th>
+        <th>Message</th>
+        <th>New Model</th>
+        <th>Old Model</th>
+        <th>Latency</th>
+        <th>Remote IP</th>
+        <th>TimeStamp</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+    </table>
+  </div>
+
+</div>

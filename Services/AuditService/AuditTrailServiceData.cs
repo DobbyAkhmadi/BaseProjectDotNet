@@ -1,6 +1,6 @@
 ﻿namespace BaseProjectDotnet.Services.AuditService;
 
-public class AuditTrailData :IAuditTrailService
+public class AuditTrailServiceData :IAuditTrailService
 {
 
 }

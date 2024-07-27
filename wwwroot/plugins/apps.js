@@ -1,3 +1,9 @@
+$(document).ready(function () {
+  const menu1 = document.querySelector('#menu-1');
+  if (menu1) {
+    new Menu(menu1);
+  }
+});
 function startLoading() {
   $.blockUI({
     message: '<div class="spinner-border text-primary" role="status"></div>',
@@ -13,15 +19,19 @@ function startLoading() {
       opacity: 0.8
     }
   });
-
 }
 
 function endLoading() {
   $.unblockUI();
 }
 
-function showToast(status, message, data) {
-  toastr.success('Save Successfully!', 'Success')
+function showToast(data) {
+  const flag = (data.Success==true) ? undefined : false;
+  if (flag) {
+    toastr.success(data.Message, 'Message')
+  } else {
+    toastr.error("ERROR :" + data.Message, 'Message')
+  }
   toastr.options = {
     "closeButton": false,
     "debug": true,
@@ -37,80 +47,107 @@ function showToast(status, message, data) {
     "showEasing": "swing",
     "hideEasing": "linear",
     "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"}
+    "hideMethod": "fadeOut"
   }
+}
 
-  function RequestAsync(method, url, dataType, data, callback, isLoading, toast) {
-    $.ajax({
-      type: method,
-      url: url,
-      data: data,
-      dataType: dataType,
-      async: true,
-      headers: {'dataType': dataType},
-      beforeSend: function () {
-        if (isLoading) {
-          startLoading();
-        }
-      },
-      success: callback,
-      error: function (xhr) {
-        if (isLoading) {
-          endLoading();
-          showToast("error", true, xhr);
-        }
-      },
-    }).done(function (data) {
-      if (toast) {
-        showToast("success", true, data);
-      }
-
-      if (isLoading) {
-        endLoading();
-      }
-    });
+function isConfirm(title, content, confirm, cancel) {
+  if (cancel == undefined) {
+    cancel = function () {
+    };
   }
-
-  function APIRequestAsync(method, url, dataType, data, callback, isLoading, toast, isSaveLog) {
-    $.ajax({
-      type: method,
-      url: url,
-      data: data,
-      dataType: dataType,
-      async: true,
-      headers: {'dataType': dataType},
-      beforeSend: function () {
-        if (isLoading) {
-          startLoading();
-        }
+  $.confirm({
+    title: title,
+    content: content,
+    autoClose: 'cancel|10000',
+    buttons: {
+      confirm: {
+        text: 'Ya',
+        btnClass: 'btn-success',
+        keys: ['enter'],
+        action: confirm
       },
-      success: callback,
-      error: function (xhr) {
-        showToast("error", true, xhr);
-      },
-    }).done(function (data) {
-      if (toast) {
-        showToast("success", true, data);
+      cancel: {
+        text: 'Batal',
+        btnClass: 'btn-danger',
+        keys: ['esc'],
+        action: cancel
       }
-
-      if (isLoading) {
-        endLoading();
-      }
-
-      let methodList = ['PUT', 'POST', 'PATCH']
-      if (isSaveLog) {
-        if (method.contains(methodList)) {
-          // exec method log audit
-
-        }
-      }
-    });
-  }
-
-  function objectifyForm(formArray) {
-    var returnArray = {};
-    for (var i = 0; i < formArray.length; i++) {
-      returnArray[formArray[i]['name']] = formArray[i]['value'];
     }
-    return returnArray;
+  });
+}
+
+function RequestAsync(method, url, dataType, data, callback, isLoading, toast) {
+  $.ajax({
+    type: method,
+    url: url,
+    data: data,
+    dataType: dataType,
+    async: true,
+    headers: {'dataType': dataType},
+    beforeSend: function () {
+      if (isLoading) {
+        startLoading();
+      }
+    },
+    success: callback,
+    error: function (xhr) {
+      if (isLoading) {
+        endLoading();
+        showToast(xhr);
+      }
+    },
+  }).done(function (data) {
+    if (toast) {
+      showToast(data);
+    }
+
+    if (isLoading) {
+      endLoading();
+    }
+  });
+}
+
+function APIRequestAsync(method, url, dataType, data, callback, isLoading, toast, isSaveLog) {
+  $.ajax({
+    type: method,
+    url: url,
+    data: data,
+    dataType: dataType,
+    async: true,
+    headers: {'dataType': dataType},
+    beforeSend: function () {
+      if (isLoading) {
+        startLoading();
+      }
+    },
+    success: callback,
+    error: function (xhr) {
+      showToast("error", true, xhr);
+    },
+  }).done(function (data) {
+    if (toast) {
+      showToast("success", true, data);
+    }
+
+    if (isLoading) {
+      endLoading();
+    }
+
+    let methodList = ['PUT', 'POST', 'PATCH']
+    if (isSaveLog) {
+      if (method.contains(methodList)) {
+        // exec method log audit
+
+      }
+    }
+  });
+}
+
+function objectifyForm(formArray) {
+  var returnArray = {};
+  for (var i = 0; i < formArray.length; i++) {
+    returnArray[formArray[i]['name']] = formArray[i]['value'];
   }
+  return returnArray;
+}

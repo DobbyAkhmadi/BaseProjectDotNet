@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace BaseProjectDotnet.Controllers;
 
-public class HomeController : Controller
+public class AuthenticationController :Controller
 {
   public IActionResult Index()
   {

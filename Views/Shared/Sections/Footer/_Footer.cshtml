@@ -1,26 +1,17 @@
-@* @{ *@
-@*   TempData.Keep(); *@
-@*   ViewData["containerNav"] ??= "container-fluid"; *@
-@* } *@
-@* *@
-@* <footer class="content-footer footer bg-footer-theme"> *@
-@*   <div class='@ViewData["containerNav"] d-flex align-items-center justify-content-between py-4 flex-md-row flex-column'> *@
-@*     <div class="text-body"> *@
-@*       ©<script>document.write(new Date().getFullYear())</script>, made with ❤️ by Dobs *@
-@*     </div> *@
-@*   </div> *@
-@* </footer> *@
+@{
+  var year = DateTime.Now.Year;
+}
 
-<footer class="content-footer footer bg-primary">
+<footer class="content-footer footer bg-menu-theme">
   <div class="container-fluid d-flex flex-md-row flex-column justify-content-between align-items-md-center gap-1 py-4">
     <div>
-      <a href="https://demos.pixinvent.com/vuexy-html-admin-template/landing/" target="_blank" class="footer-text fw-bold">Vuexy</a> ©
+      <a target="_blank" class="footer-text fw-bold">Internal System © @year</a>
     </div>
     <div>
-      <a href="https://themeforest.net/licenses/standard" class="footer-link me-6" target="_blank">License</a>
-      <a href="javascript:void(0)" class="footer-link me-6">Help</a>
-      <a href="javascript:void(0)" class="footer-link me-6">Contact</a>
-      <a href="javascript:void(0)" class="footer-link">Terms &amp; Conditions</a>
+      <a class="footer-link me-6" target="_blank">License</a>
+      <a class="footer-link me-6">Help</a>
+      <a class="footer-link me-6">Contact</a>
+      <a class="footer-link">Terms &amp; Conditions</a>
     </div>
   </div>
 </footer>
