@@ -2,12 +2,12 @@
 
 public class UserDataTableModel
 {
-  public string? id;
-  public string? role_name;
-  public string? full_name;
-  public string? user_name;
-  public string? email;
-  public string? type_active;
+  public string? id { get; set; }
+  public string? role_name { get; set; }
+  public string? full_name { get; set; }
+  public string? user_name { get; set; }
+  public string? email { get; set; }
+  public string? type_active { get; set; }
 }
 
 public class UserModel

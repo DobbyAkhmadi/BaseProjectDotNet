@@ -18,18 +18,18 @@ public class UserServiceData(DatabaseContext _context) : IUserService
       using var sqlConnection = _context.DConnection1();
       using var sqlCommand = new SqlCommand(StaticSp.StpUserIndex, sqlConnection);
       sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
-      //sqlCommand.Parameters.AddWithValue("@Keywords", (args.search.value ?? "").Trim());
+      sqlCommand.Parameters.AddWithValue("@Keywords", (args.search.value ?? "").Trim());
       sqlCommand.Parameters.AddWithValue("@FromStart", args.start);
       sqlCommand.Parameters.AddWithValue("@FromEnd", args.length);
-     // sqlCommand.Parameters.AddWithValue("@Sort", args.order[0]?.dir);
-   //   sqlCommand.Parameters.AddWithValue("@FieldIndex", args.order[0].column);
+      sqlCommand.Parameters.AddWithValue("@Sort", args.order[0]?.dir);
+      sqlCommand.Parameters.AddWithValue("@FieldIndex", args.order[0].column);
       sqlConnection.Open();
 
       using (var dataReader = sqlCommand.ExecuteReader())
       {
         while (dataReader.Read())
         {
-          var model = new UserDataTableModel()
+          var model = new UserDataTableModel
           {
             id = dataReader["id"] != DBNull.Value ? dataReader["id"].ToString() : string.Empty,
             full_name = dataReader["full_name"] != DBNull.Value ? dataReader["full_name"].ToString() : string.Empty,
@@ -50,7 +50,7 @@ public class UserServiceData(DatabaseContext _context) : IUserService
       throw;
     }
 
-    return new DataTableResultModel()
+    return new DataTableResultModel
     {
       data = Result,
       draw = args.draw,
