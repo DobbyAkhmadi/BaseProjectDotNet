@@ -10,7 +10,7 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
 {
   public DataTableResultModel Index(DataTableRequestModel args)
   {
-    List<AuditTrailModel> Result = [];
+    List<AuditTrailDataTableModel> Result = [];
     var recordsTotal = AuditCount(args);
     try
     {
@@ -28,7 +28,7 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
       {
         while (dataReader.Read())
         {
-          var model = new AuditTrailModel()
+          var model = new AuditTrailDataTableModel
           {
             id = dataReader["id"] != DBNull.Value ? dataReader["id"].ToString() : string.Empty,
             user_id = dataReader["user_id"] != DBNull.Value ? dataReader["user_id"].ToString() : string.Empty,
