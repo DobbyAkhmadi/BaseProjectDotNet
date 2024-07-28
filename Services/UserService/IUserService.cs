@@ -1,14 +1,15 @@
 ﻿using BaseProjectDotnet.Helpers.Database;
 using BaseProjectDotnet.Helpers.Global.Models;
 using BaseProjectDotnet.Services.AuditService.Model;
+using BaseProjectDotnet.Services.UserService.Model;
 
-namespace BaseProjectDotnet.Services.AuditService;
+namespace BaseProjectDotnet.Services.UserService;
 
-public interface IAuditTrailService
+public interface IUserService
 {
   DataTableResultModel Index(DataTableRequestModel args);
-  DbResponseResult SaveAudit(AuditTrailModel auditTrailModel);
+  DbResponseResult Upsert(UserModel userModel);
   AuditTrailModel GetById(string id);
-  DbResponseResult Archived(string id);
+  DbResponseResult Delete(string id);
   DbResponseResult Restore(string id);
 }

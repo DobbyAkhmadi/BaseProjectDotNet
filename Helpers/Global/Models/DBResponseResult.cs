@@ -1,4 +1,4 @@
-namespace BaseProjectDotnet.Models;
+namespace BaseProjectDotnet.Helpers.Global.Models;
 
 public class DbResponseResult()
 {

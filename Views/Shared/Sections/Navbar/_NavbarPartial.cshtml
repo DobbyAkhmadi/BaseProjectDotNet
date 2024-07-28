@@ -1,3 +1,7 @@
+@using BaseProjectDotnet.Helpers.Global
+@{
+  var title = @GlobalVariable.App_Title;
+}
 @* ! Brand demo (display only for navbar-full and hide on below xl) *@
 @if (ViewData["navbarFull"] != null)
 {
@@ -9,7 +13,7 @@
       @* <span class="app-brand-logo demo"> *@
       @*   <img src="~/img/icons/brands/react-logo.png" alt class="rounded-circle"> *@
       @* </span> *@
-      <span class="app-brand-text demo menu-text fw-bold">Internal System</span>
+      <span class="app-brand-text demo menu-text fw-bold">@title</span>
     </a>
 
     @* ! Display menu close icon only for horizontal-menu with navbar-full *@

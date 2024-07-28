@@ -5,8 +5,9 @@ public abstract class StaticSp
   // Audit Trail
   public const string? StpAuditTrailIndex = "[dbo].[SP_AuditTrailIndex]";
   public const string? StpAuditTrailIndexCount = "[dbo].[SP_AuditTrailIndexCount]";
-  public const string? StpAuditTrailUpsert = "[dbo].[SP_AuditTrailCreate]";
-  public const string? StpAuditTrailDelete = "[dbo].[SP_AuditTrailDelete]";
+  public const string? StpAuditTrailCreate = "[dbo].[SP_AuditTrailCreate]";
+  public const string? StpAuditTrailDetail = "[dbo].[SP_AuditTrailDetail]";
+  public const string? StpAuditTrailArchived = "[dbo].[SP_AuditTrailArchived]";
   public const string? StpAuditTrailRestore = "[dbo].[SP_AuditTrailRestore]";
 
   // Users

@@ -1,4 +1,4 @@
-using BaseProjectDotnet.Models;
+using BaseProjectDotnet.Helpers.Global.Models;
 using BaseProjectDotnet.Services.PersonService.Model;
 
 namespace BaseProjectDotnet.Services.PersonService;

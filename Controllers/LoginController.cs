@@ -2,7 +2,7 @@
 
 namespace BaseProjectDotnet.Controllers;
 
-public class AuthenticationController :Controller
+public class LoginController : Controller
 {
   public IActionResult Index()
   {

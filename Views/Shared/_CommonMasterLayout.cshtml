@@ -1,3 +1,4 @@
+@using BaseProjectDotnet.Helpers.Global
 @{
   @* using this variables to load front pages assets *@
   bool isFront = ViewData["isFront"] is bool isFrontValue ? isFrontValue : false;
@@ -5,6 +6,8 @@
   ViewData["frontVar"] = isFront ? "Front" : "";
   @* Compact/Fluid class *@
   ViewData["contentType"] = ViewData["container"] is string container && container == "container-xxl" ? "layout-compact" : "layout-wide";
+  var appName = @GlobalVariable.App_Title;
+  var title = ViewContext.RouteData.Values["controller"]?.ToString();
 }
 
 @inject IHttpContextAccessor httpContextAccessor
@@ -18,11 +21,6 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
-
-  @{
-    var title = ViewContext.RouteData.Values["controller"]?.ToString();
-    var appName = "Internal System";
-  }
   <title>@appName | @title </title>
   <meta name="description" content=""/>
 

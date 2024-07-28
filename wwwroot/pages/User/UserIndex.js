@@ -5,14 +5,14 @@ $(document).ready(async function () {
 var datatable;
 
 function initDataTable() {
-  datatable = $('#dataTable').DataTable({
+  datatable = $('#dataTableUser').DataTable({
     iDisplayLength: 25,
     processing: true,
     serverSide: true,
     ordering: true,
     responsive: true,
     ajax: {
-      url: "/internal/Audit/index-post",
+      url: "/internal/User/index-post",
       type: 'POST',
       contentType: "application/json",
       async: true,
@@ -33,28 +33,22 @@ function initDataTable() {
       }
     },
     columns: [
-      { "data": "user_name" },
-      { "data": "role_name" },
-      { "data": "remote_ip" },
-      { "data": "session_id" },
-      { "data": "action" },
-      { "data": "function_name" },
-      { "data": "message" },
-      { "data": "old_model" },
-      { "data": "new_model" },
-      { "data": "latency" },
-      { "data": "created_date" },
+      {"data": "full_name"},
+       {"data": "user_name"},
+       {"data": "role_name"},
+       {"data": "email"},
+       {"data": "type_active"},
       {
         'className': 'text-center',
         'sortable': false,
         'render': function (data, type, item, meta) {
-         // console.log(item)
+          // console.log(item)
           let action = '<div class="action">';
-          action += '<a title="Detail" class="btn btn-icon btn-text-success  waves-effect waves-light rounded-pill"><i class="ti ti-eye ti-md" style="color: green;"></i></a>';
-          action += '<a title="Archived" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-archive ti-md" style="color: blueviolet;"></i></a>';
-        //  action += '<a title="Edit" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-pencil ti-md"></i></a>';
-        //  action += '<a title="Delete" class="btn btn-icon btn-text-danger waves-effect waves-light rounded-pill"><i class="ti ti-trash ti-md"></i></a>';
-        //  action += '<a title="Restore" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-restore ti-md"></i></a>';
+          action += '<a title="Detail" class="btn btn-icon btn-text-success  waves-effect waves-light rounded-pill"><i class="ti ti-eye ti-md" style="color: lightslategray;"></i></a>';
+          // action += '<a title="Archived" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-archive ti-md" style="color: blueviolet;"></i></a>';
+          action += '<a title="Edit" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-pencil ti-md" style="color: green;"></i></a>';
+          action += '<a title="Delete" class="btn btn-icon btn-text-danger waves-effect waves-light rounded-pill"><i class="ti ti-trash ti-md" style="color: red;"></i></a>';
+          //  action += '<a title="Restore" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-restore ti-md"></i></a>';
           action += '</div>';
           return action;
         }
@@ -63,17 +57,18 @@ function initDataTable() {
     columnDefs: [
       {
         defaultContent: "-",
-        targets: "_all"}
+        targets: "_all"
+      }
     ],
     dom:
       '<"row"' +
-        '<"col-md-4 d-flex align-items-center"l>' +
-        '<"col-md-8 d-flex justify-content-end align-items-center"fB>' +
+      '<"col-md-4 d-flex align-items-center"l>' +
+      '<"col-md-8 d-flex justify-content-end align-items-center"fB>' +
       '>' +
       't' +
       '<"row"' +
-        '<"col-md-4"i>' +
-        '<"col-md-4"p>' +
+      '<"col-md-4"i>' +
+      '<"col-md-4"p>' +
       '>',
     language: {
       sLengthMenu: '_MENU_',
@@ -229,51 +224,6 @@ function initDataTable() {
     '</label>');
 }
 
-$(document).on("click", ".add-new", function () {
-  datatable.draw();
-});
-
-$("#btn-click").on("click", async function () {
-  let form = {
-    Success: true,
-    Message: "xxxxxxx"
-  }
-  confirm = function () {
-    showToast(form)
-  }
-  isConfirm('Delete Confirmation', 'Are you sure want to <b>delete</b> this data ?', confirm)
-
-});
-
-$('#TypeTransport').last().select2({
-  width: '100%',
-  placeholder: 'select',
-  minimumInputLength: 0
-  //,
-  // ajax: {
-  //   url: 'master/TypeTransportSelect2',
-  //   dataType: 'json',
-  //   delay: 0,
-  //   cache: true,
-  //   data: function (param) {
-  //     return {
-  //       q: param,
-  //     };
-  //   },
-  //   processResults: function (data, params) {
-  //     var output = [];
-  //     var results = data.Payload;
-  //     if (results) {
-  //       $.each(results, function (index) {
-  //         output.push({
-  //           'id': results[index]['id'],
-  //           'text': results[index]['text']
-  //         });
-  //       });
-  //     }
-  //     return {
-  //       results: output
-  //     };
-  //   }
-  // }
+$(document).on("click", ".add-new-role", function () {
+  $("#modal-role").modal('show');
 });

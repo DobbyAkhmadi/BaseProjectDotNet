@@ -10,7 +10,7 @@ public class DatabaseContext
     {
         var database = new DatabaseConnection();
         configuration.Bind(dbConfigName, database);
-        Connection1 = database.DB_LATIHAN;
+        Connection1 = database.MainDatabase;
     }
     public SqlConnection DConnection1()
     {
@@ -20,5 +20,5 @@ public class DatabaseContext
 
 public class DatabaseConnection
 {
-    public string DB_LATIHAN { get; set; }
+    public string MainDatabase { get; set; }
 }

@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using BaseProjectDotnet.Helpers.Database;
 using BaseProjectDotnet.Helpers.Database.Procedure;
 using BaseProjectDotnet.Helpers.Database.UDT;
+using BaseProjectDotnet.Helpers.Global.Models;
 using BaseProjectDotnet.Models;
 using BaseProjectDotnet.Services.PersonService.Model;
 

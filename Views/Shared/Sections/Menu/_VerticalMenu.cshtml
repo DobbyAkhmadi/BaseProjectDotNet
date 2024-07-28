@@ -1,73 +1,99 @@
+@using BaseProjectDotnet.Helpers.Global
+
+@{
+  var audit = GlobalVariable.UrlInternalAudit;
+  var home = GlobalVariable.UrlInternalHome;
+  var users = GlobalVariable.UrlInternalUsers;
+  var userRoles = GlobalVariable.UrlInternalUserRoles;
+  var userPermission = GlobalVariable.UrlInternalUserPermission;
+  var isActive = HttpContextAccessor.HttpContext?.Request.Path.ToString();
+}
 <!-- Sidebar Menu -->
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme hidden-menu">
-   <div class="menu menu-vertical bg-menu-theme py-10" id="menu-1">
+  <div class="menu menu-vertical bg-menu-theme py-10" id="menu-1">
     <ul class="menu-inner">
 
       <li class="menu-divider mb-0"></li>
       <li class="menu-header small fw-medium">Main Menu</li>
-      <li class="menu-item active">
-        <a class="menu-link " href="/Home"><i class="menu-icon ti ti-home"></i>
+      <li class="menu-item @(isActive == home ? "active" : "")">
+        <a class="menu-link" href="@home">
+          <i class="menu-icon ti ti-home"></i>
           <div>
             Home
-          </div></a>
+          </div>
+        </a>
       </li>
 
       <li class="menu-divider mb-0"></li>
       <li class="menu-header small fw-medium">Master Management</li>
       <li class="menu-item">
-        <a class="menu-link menu-toggle"><i class="menu-icon ti ti-album"></i>
+        <a class="menu-link menu-toggle">
+          <i class="menu-icon ti ti-album"></i>
           <div>
             Master
-          </div></a>
+          </div>
+        </a>
         <ul class="menu-sub">
           <li class="menu-item">
             <a class="menu-link">
               <div>
                 Employee
-              </div></a>
+              </div>
+            </a>
           </li>
         </ul>
       </li>
 
       <li class="menu-divider mb-0"></li>
       <li class="menu-header small fw-medium">User Management</li>
-      <li class="menu-item">
-        <a class="menu-link menu-toggle"><i class="menu-icon ti ti ti-users"></i>
+      <li class="menu-item @(((isActive == users)||(isActive==userRoles)||(isActive==userPermission)) ? "open" : "")">
+        <a class="menu-link menu-toggle">
+          <i class="menu-icon ti ti ti-users"></i>
           <div>
             Users
-          </div></a>
+          </div>
+        </a>
         <ul class="menu-sub">
-          <li class="menu-item">
-            <a class="menu-link">
+          <li class="menu-item @(isActive == users ? "active" : "")">
+            <a class="menu-link" href="@users">
               <div>
-                Roles 1
-              </div></a>
+                List
+              </div>
+            </a>
           </li>
-          <li class="menu-item">
-            <a class="menu-link">
+        </ul>
+        <ul class="menu-sub">
+          <li class="menu-item @(isActive == userRoles ? "active" : "")">
+            <a class="menu-link" href="@userRoles">
+              <div>
+                Roles
+              </div>
+            </a>
+          </li>
+        </ul>
+        <ul class="menu-sub">
+          <li class="menu-item @(isActive == userPermission ? "active" : "")">
+            <a class="menu-link" href="@userPermission">
               <div>
                 Permission
-              </div></a>
-          </li>
-          <li class="menu-item">
-            <a class="menu-link">
-              <div>
-                Menu 3
-              </div></a>
+              </div>
+            </a>
           </li>
         </ul>
       </li>
 
       <li class="menu-divider mb-0"></li>
       <li class="menu-header small fw-medium">Audit Management</li>
-      <li class="menu-item">
-        <a class="menu-link menu-toggle"><i class="menu-icon ti ti-alarm-plus"></i>
+      <li class="menu-item @(isActive == audit ? "open" : "")">
+        <a class="menu-link menu-toggle">
+          <i class="menu-icon ti ti-alarm-plus"></i>
           <div>
-           Audit Trail
-          </div></a>
+            Audit Trail
+          </div>
+        </a>
         <ul class="menu-sub">
-          <li class="menu-item">
-            <a class="menu-link" href="/Audit">
+          <li class="menu-item @(isActive == audit ? "active" : "")">
+            <a class="menu-link" href="@audit">
               <div>
                 List
               </div>
@@ -76,5 +102,5 @@
         </ul>
       </li>
     </ul>
-   </div>
+  </div>
 </aside>

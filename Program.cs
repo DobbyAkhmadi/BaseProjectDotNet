@@ -1,13 +1,13 @@
 using BaseProjectDotnet.Services.AuditService;
-using BaseProjectDotnet.Services.AuthenticationService;
 using BaseProjectDotnet.Services.PersonService;
+using BaseProjectDotnet.Services.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddScoped<BaseProjectDotnet.Helpers.Database.DatabaseContext>();
 builder.Services.AddScoped<IPersonService, PersonServiceData>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationServiceData>();
+builder.Services.AddScoped<IUserService, UserServiceData>();
 builder.Services.AddScoped<IAuditTrailService, AuditTrailServiceData>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
@@ -32,10 +32,10 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
-app.UseAuthorization(); // Ensure Authorization is added after Authentication
+app.UseAuthorization(); // Ensure Authorization is added after Authentications
 
 app.MapControllers();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Authentication}/{action=Index}");
+    pattern: "{controller=Login}/{action=Index}");
 app.Run();

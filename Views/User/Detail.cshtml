@@ -1,4 +1,50 @@
-﻿<div class="col-md-12">
+<div class="row g-6 mb-6">
+  <div class="col-sm-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-start justify-content-between">
+          <div class="content-left">
+            <span class="text-heading">Session</span>
+            <div class="d-flex align-items-center my-1">
+              <h4 class="mb-0 me-2">21,459</h4>
+              <p class="text-success mb-0">(+29%)</p>
+            </div>
+            <small class="mb-0">Total Users</small>
+          </div>
+          <div class="avatar">
+            <span class="avatar-initial rounded bg-label-primary">
+              <i class="ti ti-users ti-26px"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-start justify-content-between">
+          <div class="content-left">
+            <span class="text-heading">Active Users</span>
+            <div class="d-flex align-items-center my-1">
+              <h4 class="mb-0 me-2">19,860</h4>
+              <p class="text-danger mb-0">(-14%)</p>
+            </div>
+            <small class="mb-0">Last week analytics</small>
+          </div>
+          <div class="avatar">
+            <span class="avatar-initial rounded bg-label-success">
+              <i class="ti ti-user-check ti-26px"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12">
   <div class="card card-action bg-menu-theme mb-6 card-border-shadow-primary">
 
     <div class="card-header">
@@ -43,7 +89,7 @@
                 <button type="button" class="btn btn-secondary me-2">
                   <span class="tf-icons ti-xs ti ti-arrow-back me-2"></span> Clear
                 </button>
-                </div>
+              </div>
             </div>
           </div>
           <div class="col-4">
@@ -83,22 +129,16 @@
   </div>
 
   <div class="card-datatable table-responsive pt-0">
-    <table class="datatables-basic table" id="dataTable">
+    <table class="datatables-basic table" id="dataTableUser">
       <thead>
-        <tr>
-          <th>User Name</th>
-          <th>Role Name</th>
-          <th>Remote IP</th>
-          <th>Session ID</th>
-          <th>Action</th>
-          <th>Function Name</th>
-          <th>Message</th>
-          <th>Old Model</th>
-          <th>New Model</th>
-          <th>Latency</th>
-          <th>Created Date</th>
-          <th>Actions</th>
-        </tr>
+      <tr>
+        <th>Full Name</th>
+        <th>User Name</th>
+        <th>Role Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
       </thead>
       <tbody>
 
@@ -107,3 +147,5 @@
   </div>
 
 </div>
+
+
