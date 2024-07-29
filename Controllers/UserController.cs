@@ -1,4 +1,6 @@
 ﻿using BaseProjectDotnet.Helpers.Database;
+using BaseProjectDotnet.Helpers.Global.Models;
+using BaseProjectDotnet.Services.AuditService;
 using BaseProjectDotnet.Services.UserService;
 using BaseProjectDotnet.Services.UserService.Model;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +9,7 @@ namespace BaseProjectDotnet.Controllers;
 
 [ApiController]
 [Route("/internal/[controller]")]
-public class UserController(IUserService _userService) : Controller
+public class UserController(IUserService _userService, IAuditTrailService _audit) : Controller
 {
   public IActionResult Index()
   {
@@ -31,6 +33,105 @@ public class UserController(IUserService _userService) : Controller
         error = exception.Message
       });
     }
+  }
+
+  [HttpPost]
+  [Route("upsert")]
+  [ProducesResponseType(typeof(DbResponseResult), 200)]
+  [ProducesResponseType(500)]
+  public IActionResult Upsert([FromBody] UserModel model)
+  {
+    DbResponseResult res;
+    try
+    {
+      // set required
+      var requiredFields = new Dictionary<string, string>
+      {
+        { nameof(model.id_roles), model.id_roles },
+        { nameof(model.full_name), model.full_name },
+        { nameof(model.user_name), model.user_name },
+        { nameof(model.email), model.email },
+        { nameof(model.password), model.password }
+      };
+
+      foreach (var field in requiredFields.Where(field => string.IsNullOrEmpty(field.Value)))
+      {
+        ModelState.AddModelError(field.Key, "This field is required!");
+      }
+
+      if (ModelState.IsValid)
+      {
+        res = _userService.Upsert(model);
+
+        if (res.Success)
+        {
+          var newModel = _userService.GetById(res.Payload?.ToString());
+          //   AuditTrail.SaveAuditTrail(model, null, newModel, "Create Pangkalan", "PANGKALAN.CREATE", UserIdentity.IdUser.ToString(), UserIdentity.RoleName.ToString(), GroupAccessAuditTail.AuditTrailGroupAccessDDMS);
+        }
+      }
+      else
+      {
+        return BadRequest(ModelState);
+      }
+    }
+    catch (Exception ex)
+    {
+      return StatusCode(500, ex.Message);
+    }
+
+    return Ok(res);
+  }
+
+  [HttpGet]
+  [Route("detail")]
+  [ProducesResponseType(typeof(DbResponseResult), 200)]
+  [ProducesResponseType(500)]
+  public IActionResult Detail([FromForm] string id)
+  {
+    var res = new DbResponseResult();
+    try
+    {
+      res.Success = true;
+      res.Payload = _userService.GetById(id);
+    }
+    catch (Exception ex)
+    {
+      res.Success = false;
+      res.Message = ex.Message;
+    }
+
+    return Ok(res);
+  }
+
+  [HttpDelete]
+  [Route("delete")]
+  [ProducesResponseType(typeof(DbResponseResult), 200)]
+  [ProducesResponseType(500)]
+  public IActionResult Delete([FromForm] string id)
+  {
+    DbResponseResult res;
+    try
+    {
+      if (ModelState.IsValid)
+      {
+        //    DbResponseResult oldModel = _userService.GetById(model.id);
+        res = _userService.Delete(id);
+        if (res.Success)
+        {
+          //  AuditTrail.SaveAuditTrail(model, oldModel, null, "Delete Pangkalan", "PANGKALAN.DELETE", UserIdentity.IdUser.ToString(), UserIdentity.RoleName.ToString(), GroupAccessAuditTail.AuditTrailGroupAccessDDMS);
+        }
+      }
+      else
+      {
+        return BadRequest(ModelState);
+      }
+    }
+    catch (Exception ex)
+    {
+      return StatusCode(500, ex.Message);
+    }
+
+    return Ok(res);
   }
 
   [Route("Roles")]

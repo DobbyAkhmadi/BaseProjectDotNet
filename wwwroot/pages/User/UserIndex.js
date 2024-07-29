@@ -1,5 +1,6 @@
 $(document).ready(async function () {
   await initDataTable();
+  await initSelect2();
 });
 
 var datatable;
@@ -17,6 +18,7 @@ function initDataTable() {
       contentType: "application/json",
       async: true,
       data: function (data) {
+        data.TypeActive = convertIsDeleted($("#IsDeleted"));
         data.columns.pop();
         return JSON.stringify(data);
       },
@@ -34,21 +36,40 @@ function initDataTable() {
     },
     columns: [
       {"data": "full_name"},
-       {"data": "user_name"},
-       {"data": "role_name"},
-       {"data": "email"},
-       {"data": "type_active"},
+      {"data": "user_name"},
+      {"data": "role_name"},
+      {"data": "email"},
+      {
+        "data": "type_active",
+        'className': 'text-center',
+        'render': function (data, type, item, meta) {
+          let action = '-'; // Default value if data is not "1"
+          if (data === "1") {
+            action = '<span class="badge me-4 bg-label-success">Active</span>';
+          } else if (data === "3") {
+            action = '<span class="badge me-4 bg-label-secondary">Inactive</span>';
+          } else {
+            action = '<span class="badge me-4 bg-label-warning">Archived</span>';
+          }
+          return action;
+        }
+      },
       {
         'className': 'text-center',
         'sortable': false,
         'render': function (data, type, item, meta) {
-          // console.log(item)
           let action = '<div class="action">';
-          action += '<a title="Detail" class="btn btn-icon btn-text-success  waves-effect waves-light rounded-pill"><i class="ti ti-eye ti-md" style="color: lightslategray;"></i></a>';
-          // action += '<a title="Archived" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-archive ti-md" style="color: blueviolet;"></i></a>';
-          action += '<a title="Edit" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-pencil ti-md" style="color: green;"></i></a>';
-          action += '<a title="Delete" class="btn btn-icon btn-text-danger waves-effect waves-light rounded-pill"><i class="ti ti-trash ti-md" style="color: red;"></i></a>';
-          //  action += '<a title="Restore" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-restore ti-md"></i></a>';
+            if (item.type_active == "3") {
+              action += '<a title="Detail" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill item-detail"><i class="ti ti-eye ti-md" style="color: lightslategray;"></i></a>';
+              action += '<a title="Restore" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-restore ti-md"></i></a>';
+            } else if (item.type_active == "5") {
+              action += '<a title="Detail" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-eye ti-md" style="color: lightslategray;"></i></a>';
+              action += '<a title="Archived" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-archive ti-md" style="color: blueviolet;"></i></a>';
+            } else {
+              action += '<a title="Detail" class="btn btn-icon btn-text-success  waves-effect waves-light rounded-pill"><i class="ti ti-eye ti-md" style="color: lightslategray;"></i></a>';
+              action += '<a title="Edit" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-pencil ti-md" style="color: green;"></i></a>';
+              action += '<a title="Delete" class="btn btn-icon btn-text-danger waves-effect waves-light rounded-pill"><i class="ti ti-trash ti-md" style="color: red;"></i></a>';
+            }
           action += '</div>';
           return action;
         }
@@ -226,4 +247,82 @@ function initDataTable() {
 
 $(document).on("click", ".add-new-role", function () {
   $("#modal-role").modal('show');
+});
+
+function initSelect2() {
+  $("#RolesSelect2").last().select2({
+    allowClear: true,
+    placeholder: 'Select Item',
+    minimumInputLength: 0,
+    ajax: {
+      url: 'Master/roles-select2',
+      dataType: 'json',
+      delay: 0,
+      async: true,
+      cache: true,
+      data: function (param) {
+        return {
+          q: param
+        };
+      },
+      processResults: function (data, params) {
+        var output = [];
+        var results = data.payload;
+        if (results) {
+          $.each(results, function (index) {
+            output.push({
+              'id': results[index]['id'],
+              'text': results[index]['text']
+            });
+          });
+        }
+        return {
+          results: output,
+          pagination: {
+            more: data.payload.length >= 20 ? true : false
+          }
+        }
+      }
+    }
+  });
+  $("#StatusSelect2").last().select2({
+    allowClear: true,
+    placeholder: 'Select Item',
+    minimumInputLength: 0,
+    ajax: {
+      url: 'Master/status-select2',
+      dataType: 'json',
+      delay: 0,
+      async: true,
+      cache: true,
+      data: function (param) {
+        return {
+          q: param
+        };
+      },
+      processResults: function (data, params) {
+        var output = [];
+        var results = data.payload;
+        if (results) {
+          $.each(results, function (index) {
+            output.push({
+              'id': results[index]['id'],
+              'text': results[index]['text']
+            });
+          });
+        }
+        return {
+          results: output,
+          pagination: {
+            more: data.payload.length >= 20 ? true : false
+          }
+        }
+      }
+    }
+  });
+}
+
+$(document).on("change", "#IsDeleted", function (e) {
+  e.preventDefault();
+  datatable.draw();
 });

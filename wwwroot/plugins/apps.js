@@ -4,6 +4,7 @@ $(document).ready(function () {
     new Menu(menu1);
   }
 });
+
 function startLoading() {
   $.blockUI({
     message: '<div class="spinner-border text-primary" role="status"></div>',
@@ -26,7 +27,7 @@ function endLoading() {
 }
 
 function showToast(data) {
-  const flag = (data.Success==true) ? undefined : false;
+  const flag = (data.Success == true) ? undefined : false;
   if (flag) {
     toastr.success(data.Message, 'Message')
   } else {
@@ -144,10 +145,14 @@ function APIRequestAsync(method, url, dataType, data, callback, isLoading, toast
   });
 }
 
-function objectifyForm(formArray) {
-  var returnArray = {};
-  for (var i = 0; i < formArray.length; i++) {
-    returnArray[formArray[i]['name']] = formArray[i]['value'];
-  }
-  return returnArray;
+function formToJson(formElement) {
+  const formData = new FormData(formElement);
+  return Object.fromEntries(formData.entries());
+}
+
+function convertIsDeleted(element) {
+  // Ensure the element is a jQuery object
+  const obj = $(element);
+  // Check if the element is checked
+  return obj.is(':checked') ? 3 : 1;
 }

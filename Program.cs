@@ -1,4 +1,5 @@
 using BaseProjectDotnet.Services.AuditService;
+using BaseProjectDotnet.Services.MasterService;
 using BaseProjectDotnet.Services.PersonService;
 using BaseProjectDotnet.Services.UserService;
 
@@ -9,6 +10,7 @@ builder.Services.AddScoped<BaseProjectDotnet.Helpers.Database.DatabaseContext>()
 builder.Services.AddScoped<IPersonService, PersonServiceData>();
 builder.Services.AddScoped<IUserService, UserServiceData>();
 builder.Services.AddScoped<IAuditTrailService, AuditTrailServiceData>();
+builder.Services.AddScoped<IMasterService, MasterServiceDAL>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();

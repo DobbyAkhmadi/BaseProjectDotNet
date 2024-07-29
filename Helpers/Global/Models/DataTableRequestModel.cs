@@ -1,4 +1,4 @@
-﻿namespace BaseProjectDotnet.Helpers.Database
+﻿namespace BaseProjectDotnet.Helpers.Global.Models
 {
   public class DataTableRequestModel
   {
@@ -17,6 +17,8 @@
     public DataTableSearchBindingModel search { get; set; }
     public List<DataTableColumnBindingModel> columns { get; set; }
     public Dictionary<string, string> advSearch { get; set; }
+
+    public int TypeActive { get; set; }=1;
 
     public class DataTableOrderBindingModel
     {

@@ -23,6 +23,7 @@ public class UserServiceData(DatabaseContext _context) : IUserService
       sqlCommand.Parameters.AddWithValue("@FromEnd", args.length);
       sqlCommand.Parameters.AddWithValue("@Sort", args.order[0]?.dir);
       sqlCommand.Parameters.AddWithValue("@FieldIndex", args.order[0].column);
+      sqlCommand.Parameters.AddWithValue("@TypeActive", args.TypeActive);
       sqlConnection.Open();
 
       using (var dataReader = sqlCommand.ExecuteReader())
@@ -36,7 +37,9 @@ public class UserServiceData(DatabaseContext _context) : IUserService
             user_name = dataReader["user_name"] != DBNull.Value ? dataReader["user_name"].ToString() : string.Empty,
             role_name = dataReader["role_name"] != DBNull.Value ? dataReader["role_name"].ToString() : string.Empty,
             email = dataReader["email"] != DBNull.Value ? dataReader["email"].ToString() : string.Empty,
-            type_active = dataReader["type_active"] != DBNull.Value ? dataReader["type_active"].ToString() : string.Empty
+            type_active = dataReader["type_active"] != DBNull.Value
+              ? dataReader["type_active"].ToString()
+              : string.Empty
           };
           Result.Add(model);
         }
@@ -88,23 +91,115 @@ public class UserServiceData(DatabaseContext _context) : IUserService
     return result;
   }
 
-  public DbResponseResult Upsert(UserModel userModel)
+  public DbResponseResult Upsert(UserModel model)
   {
-    throw new NotImplementedException();
+    DbResponseResult result = new();
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpUserUpsert, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+
+    sqlCommand.Parameters.AddWithValue("@Role_ID", model.id_roles);
+    sqlCommand.Parameters.AddWithValue("@Full_Name", model.full_name);
+    sqlCommand.Parameters.AddWithValue("@User_Name", model.user_name);
+    sqlCommand.Parameters.AddWithValue("@Email", model.email);
+    sqlCommand.Parameters.AddWithValue("@Password", model.password);
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
+    {
+      while (dataReader.Read())
+      {
+        result.Success = Convert.ToBoolean(dataReader["Kode"]);
+        result.Message = dataReader["Message"].ToString();
+        result.Payload = dataReader["Payload"].ToString();
+      }
+
+      dataReader.Close();
+    }
+
+    sqlConnection.Close();
+
+    return result;
   }
 
-  public AuditTrailModel GetById(string id)
+  public UserModel GetById(string? id)
   {
-    throw new NotImplementedException();
+    UserModel result = new();
+
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpUserDetail, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+
+    sqlCommand.Parameters.AddWithValue("@ID", id);
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
+    {
+      while (dataReader.Read())
+      {
+      }
+
+      dataReader.Close();
+    }
+
+    sqlConnection.Close();
+
+    return result;
   }
 
   public DbResponseResult Delete(string id)
   {
-    throw new NotImplementedException();
+    DbResponseResult result = new();
+
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpUserDelete, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+
+    sqlCommand.Parameters.AddWithValue("@ID", id);
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
+    {
+      while (dataReader.Read())
+      {
+        result.Success = Convert.ToBoolean(dataReader["Kode"]);
+        result.Message = dataReader["Message"].ToString();
+        result.Payload = dataReader["Payload"].ToString();
+      }
+      dataReader.Close();
+    }
+    sqlConnection.Close();
+
+    return result;
   }
 
   public DbResponseResult Restore(string id)
   {
-    throw new NotImplementedException();
+    DbResponseResult result = new();
+
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpUserRestore, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+
+    sqlCommand.Parameters.AddWithValue("@ID", id);
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
+    {
+      while (dataReader.Read())
+      {
+        result.Success = Convert.ToBoolean(dataReader["Kode"]);
+        result.Message = dataReader["Message"].ToString();
+        result.Payload = dataReader["Payload"].ToString();
+      }
+      dataReader.Close();
+    }
+    sqlConnection.Close();
+
+    return result;
   }
 }
