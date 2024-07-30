@@ -225,7 +225,7 @@ function initDataTable() {
     '<input class="form-check-input" ' +
     'style="margin-left: 25%" ' +
     'type="checkbox" ' +
-    'id="IsDeleted" /> Data Terhapus' +
+    'id="IsDeleted" /> Data Archived' +
     '</label>');
 }
 

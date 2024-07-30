@@ -109,13 +109,44 @@ public class UserController(IUserService _userService, IAuditTrailService _audit
   [ProducesResponseType(500)]
   public IActionResult Delete([FromForm] string id)
   {
-    DbResponseResult res;
+    DbResponseResult res=new DbResponseResult();
     try
     {
       if (ModelState.IsValid)
       {
         //    DbResponseResult oldModel = _userService.GetById(model.id);
         res = _userService.Delete(id);
+        if (res.Success)
+        {
+          //  AuditTrail.SaveAuditTrail(model, oldModel, null, "Delete Pangkalan", "PANGKALAN.DELETE", UserIdentity.IdUser.ToString(), UserIdentity.RoleName.ToString(), GroupAccessAuditTail.AuditTrailGroupAccessDDMS);
+        }
+      }
+      else
+      {
+        return BadRequest(ModelState);
+      }
+    }
+    catch (Exception ex)
+    {
+      return StatusCode(500, ex.Message);
+    }
+
+    return Ok(res);
+  }
+
+  [HttpPatch]
+  [Route("restore")]
+  [ProducesResponseType(typeof(DbResponseResult), 200)]
+  [ProducesResponseType(500)]
+  public IActionResult Restore([FromForm] string id)
+  {
+    DbResponseResult res;
+    try
+    {
+      if (ModelState.IsValid)
+      {
+        //    DbResponseResult oldModel = _userService.GetById(model.id);
+        res = _userService.Restore(id);
         if (res.Success)
         {
           //  AuditTrail.SaveAuditTrail(model, oldModel, null, "Delete Pangkalan", "PANGKALAN.DELETE", UserIdentity.IdUser.ToString(), UserIdentity.RoleName.ToString(), GroupAccessAuditTail.AuditTrailGroupAccessDDMS);

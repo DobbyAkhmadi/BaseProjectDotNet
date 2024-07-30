@@ -171,7 +171,7 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
       {
         while (dataReader.Read())
         {
-          Result.Success = Convert.ToBoolean(dataReader["Kode"]);
+          Result.Success = Convert.ToBoolean(dataReader["Code"]);
           Result.Message = dataReader["Message"].ToString();
           Result.Payload = dataReader["Payload"].ToString();
         }
@@ -207,7 +207,7 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
       {
         while (dataReader.Read())
         {
-          Result.Success = Convert.ToBoolean(dataReader["Kode"]);
+          Result.Success = Convert.ToBoolean(dataReader["Code"]);
           Result.Message = dataReader["Message"].ToString();
           Result.Payload = dataReader["Payload"].ToString();
         }

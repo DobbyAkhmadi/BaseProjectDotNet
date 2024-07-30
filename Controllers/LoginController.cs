@@ -2,8 +2,6 @@
 
 namespace BaseProjectDotnet.Controllers;
 
-[ApiController]
-[Route("/internal/[controller]")]
 public class LoginController : Controller
 {
   public IActionResult Index()

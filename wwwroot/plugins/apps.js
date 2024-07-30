@@ -27,11 +27,17 @@ function endLoading() {
 }
 
 function showToast(data) {
-  const flag = (data.Success == true) ? undefined : false;
+  console.log(data)
+  const flag = (data.success !== undefined) && (data.message !== undefined);
+
   if (flag) {
-    toastr.success(data.Message, 'Message')
+    if (data.success) {
+      toastr.success(data.message, 'Message');
+    } else {
+      toastr.error("ERROR: " + data.message, 'Message');
+    }
   } else {
-    toastr.error("ERROR :" + data.Message, 'Message')
+    toastr.error("ERROR: Undefined data structure", 'Message');
   }
   toastr.options = {
     "closeButton": false,
@@ -63,13 +69,13 @@ function isConfirm(title, content, confirm, cancel) {
     autoClose: 'cancel|10000',
     buttons: {
       confirm: {
-        text: 'Ya',
+        text: 'Yes',
         btnClass: 'btn-success',
         keys: ['enter'],
         action: confirm
       },
       cancel: {
-        text: 'Batal',
+        text: 'Cancel',
         btnClass: 'btn-danger',
         keys: ['esc'],
         action: cancel
@@ -95,7 +101,7 @@ function RequestAsync(method, url, dataType, data, callback, isLoading, toast) {
     error: function (xhr) {
       if (isLoading) {
         endLoading();
-        showToast(xhr);
+        alert(xhr.message)
       }
     },
   }).done(function (data) {

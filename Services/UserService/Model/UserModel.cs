@@ -23,16 +23,16 @@ public class UserModel
   public int type_active;
 }
 
-public abstract class Roles
+public class Roles
 {
   public string id;
   public string name;
   public string description;
-  public List<PermissionAccess>? PermissionAccess = new();
+  public List<PermissionAccess>? PermissionAccess = [];
   public int type_active;
 }
 
-public abstract class PermissionAccess
+public class PermissionAccess
 {
   public string permission_id;
   public string name;

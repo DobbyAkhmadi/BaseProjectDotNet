@@ -59,17 +59,18 @@ function initDataTable() {
         'sortable': false,
         'render': function (data, type, item, meta) {
           let action = '<div class="action">';
-            if (item.type_active == "3") {
-              action += '<a title="Detail" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill item-detail"><i class="ti ti-eye ti-md" style="color: lightslategray;"></i></a>';
-              action += '<a title="Restore" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-restore ti-md"></i></a>';
-            } else if (item.type_active == "5") {
-              action += '<a title="Detail" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-eye ti-md" style="color: lightslategray;"></i></a>';
-              action += '<a title="Archived" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-archive ti-md" style="color: blueviolet;"></i></a>';
-            } else {
-              action += '<a title="Detail" class="btn btn-icon btn-text-success  waves-effect waves-light rounded-pill"><i class="ti ti-eye ti-md" style="color: lightslategray;"></i></a>';
-              action += '<a title="Edit" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-pencil ti-md" style="color: green;"></i></a>';
-              action += '<a title="Delete" class="btn btn-icon btn-text-danger waves-effect waves-light rounded-pill"><i class="ti ti-trash ti-md" style="color: red;"></i></a>';
-            }
+          if (item.type_active == "3") {
+            action += '<a title="Detail" data-id="' + item.id + '" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill item-detail"><i class="ti ti-eye ti-md" style="color: lightslategray;"></i></a>';
+            action += '<a title="Restore" data-id="' + item.id + '" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill item-restore"><i class="ti ti-restore ti-md"></i></a>';
+          } else if (item.type_active == "5") {
+            action += '<a title="Detail" data-id="' + item.id + '" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill item-detail"><i class="ti ti-eye ti-md" style="color: lightslategray;"></i></a>';
+            action += '<a title="Archived" data-id="' + item.id + '" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-archive ti-md" style="color: blueviolet;"></i></a>';
+          } else {
+            action += '<a title="Detail" data-id="' + item.id + '" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill item-detail"><i class="ti ti-eye ti-md" style="color: lightslategray;"></i></a>';
+            action += '<a title="Edit" data-id="' + item.id + '" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill item-edit"><i class="ti ti-pencil ti-md" style="color: green;"></i></a>';
+            action += '<a title="Change Password" data-id="' + item.id + '" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill item-change"><i class="ti ti-lock-open ti-md" style="color: cornflowerblue;"></i></a>';
+            action += '<a title="Delete" data-id="' + item.id + '" class="btn btn-icon btn-text-danger waves-effect waves-light rounded-pill item-delete"><i class="ti ti-trash ti-md" style="color: red;"></i></a>';
+          }
           action += '</div>';
           return action;
         }
@@ -220,7 +221,7 @@ function initDataTable() {
         ]
       },
       {
-        text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add New User</span>',
+        text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs "></i><span class="d-none d-sm-inline-block add-new-user">Add New User</span>',
         className: 'add-new btn btn-primary waves-effect waves-light',
         attr: {
           'data-bs-toggle': 'offcanvas',
@@ -326,3 +327,64 @@ $(document).on("change", "#IsDeleted", function (e) {
   e.preventDefault();
   datatable.draw();
 });
+
+$(document).on("click", ".add-new-user", function (e) {
+  e.preventDefault();
+  $("#userModal").modal('show');
+});
+
+$("#dataTableUser").on("click", ".item-detail", function (e) {
+  e.preventDefault();
+  let dataId = $(this).data('id');
+  alert(dataId);
+});
+
+$("#dataTableUser").on("click", ".item-edit", function (e) {
+  e.preventDefault();
+  let dataId = $(this).data('id');
+  alert(dataId);
+});
+
+$("#dataTableUser").on("click", ".item-change", function (e) {
+  e.preventDefault();
+  let dataId = $(this).data('id');
+  $("#userChangePasswordModal").modal('show');
+});
+
+$("#dataTableUser").on("click", ".item-delete", function (e) {
+  e.preventDefault();
+  let url = "/internal/User/delete"
+  let dataId = $(this).data('id');
+  let form = {
+    id: dataId
+  }
+
+  confirm = function () {
+    RequestAsync("DELETE", url, "json", form, function (response) {
+      if (response.success == true) {
+        datatable.draw();
+      }
+    }, true, true);
+  }
+  isConfirm('Delete Confirmation', 'Are you sure want to <b>delete</b> this data ?', confirm)
+});
+
+$("#dataTableUser").on("click", ".item-restore", function (e) {
+  e.preventDefault();
+  let url = "/internal/User/restore"
+  let dataId = $(this).data('id');
+  let form = {
+    id: dataId
+  }
+
+  confirm = function () {
+    RequestAsync("PATCH", url, "json", form, function (response) {
+      if (response.success == true) {
+        datatable.draw();
+      }
+    }, true, true);
+  }
+  isConfirm('Restore Confirmation', 'Are you sure want to <b>restore</b> this data ?', confirm)
+});
+
+

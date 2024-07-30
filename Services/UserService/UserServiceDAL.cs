@@ -72,6 +72,7 @@ public class UserServiceData(DatabaseContext _context) : IUserService
       using var sqlCommand = new SqlCommand(StaticSp.StpUserIndexCount, sqlConnection);
       sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
       sqlCommand.Parameters.AddWithValue("@Keywords", (args.search.value ?? "").Trim());
+      sqlCommand.Parameters.AddWithValue("@TypeActive", args.TypeActive);
       sqlConnection.Open();
       using (var dataReader = sqlCommand.ExecuteReader())
       {
@@ -110,7 +111,7 @@ public class UserServiceData(DatabaseContext _context) : IUserService
     {
       while (dataReader.Read())
       {
-        result.Success = Convert.ToBoolean(dataReader["Kode"]);
+        result.Success = Convert.ToBoolean(dataReader["Code"]);
         result.Message = dataReader["Message"].ToString();
         result.Payload = dataReader["Payload"].ToString();
       }
@@ -165,7 +166,7 @@ public class UserServiceData(DatabaseContext _context) : IUserService
     {
       while (dataReader.Read())
       {
-        result.Success = Convert.ToBoolean(dataReader["Kode"]);
+        result.Success = Convert.ToBoolean(dataReader["Code"]);
         result.Message = dataReader["Message"].ToString();
         result.Payload = dataReader["Payload"].ToString();
       }
@@ -192,7 +193,7 @@ public class UserServiceData(DatabaseContext _context) : IUserService
     {
       while (dataReader.Read())
       {
-        result.Success = Convert.ToBoolean(dataReader["Kode"]);
+        result.Success = Convert.ToBoolean(dataReader["Code"]);
         result.Message = dataReader["Message"].ToString();
         result.Payload = dataReader["Payload"].ToString();
       }
