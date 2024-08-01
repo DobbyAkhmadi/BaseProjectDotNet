@@ -1,7 +1,11 @@
+using System.Text;
 using BaseProjectDotnet.Services.AuditService;
+using BaseProjectDotnet.Services.LoginService;
 using BaseProjectDotnet.Services.MasterService;
 using BaseProjectDotnet.Services.PersonService;
 using BaseProjectDotnet.Services.UserService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +15,7 @@ builder.Services.AddScoped<IPersonService, PersonServiceData>();
 builder.Services.AddScoped<IUserService, UserServiceData>();
 builder.Services.AddScoped<IAuditTrailService, AuditTrailServiceData>();
 builder.Services.AddScoped<IMasterService, MasterServiceDAL>();
+builder.Services.AddScoped<ILoginService, LoginServiceDAL>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
@@ -35,6 +40,26 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization(); // Ensure Authorization is added after Authentications
+
+//Jwt configuration starts here
+var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
+var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+  .AddJwtBearer(options =>
+  {
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+      ValidateIssuer = true,
+      ValidateAudience = true,
+      ValidateLifetime = true,
+      ValidateIssuerSigningKey = true,
+      ValidIssuer = jwtIssuer,
+      ValidAudience = jwtIssuer,
+      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+    };
+  });
+//Jwt configuration ends here
 
 app.MapControllers();
 app.MapControllerRoute(
