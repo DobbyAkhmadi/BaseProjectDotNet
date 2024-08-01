@@ -7,8 +7,8 @@ namespace BaseProjectDotnet.Services.AuditService;
 public interface IAuditTrailService
 {
   DataTableResultModel Index(DataTableRequestModel args);
-  DbResponseResult SaveAudit(AuditTrailModel auditTrailModel);
+  ResponseResultModel SaveAudit(AuditTrailModel auditTrailModel);
   AuditTrailModel GetById(string id);
-  DbResponseResult Archived(string id);
-  DbResponseResult Restore(string id);
+  ResponseResultModel Archived(string id);
+  ResponseResultModel Restore(string id);
 }

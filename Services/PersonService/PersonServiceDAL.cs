@@ -4,17 +4,16 @@ using BaseProjectDotnet.Helpers.Database;
 using BaseProjectDotnet.Helpers.Database.Procedure;
 using BaseProjectDotnet.Helpers.Database.UDT;
 using BaseProjectDotnet.Helpers.Global.Models;
-using BaseProjectDotnet.Models;
 using BaseProjectDotnet.Services.PersonService.Model;
 
 namespace BaseProjectDotnet.Services.PersonService;
 
 internal class PersonServiceData(DatabaseContext context) : IPersonService
 {
-  public DbResponseResult Upsert(PersonModel? model)
+  public ResponseResultModel Upsert(PersonModel? model)
   {
     var connection = context.DConnection1();
-    var result = new DbResponseResult();
+    var result = new ResponseResultModel();
 
     using var command = new SqlCommand(StaticSp.StpPersonUpsert, connection);
     command.CommandType = CommandType.StoredProcedure;

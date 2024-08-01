@@ -1,4 +1,4 @@
-﻿namespace BaseProjectDotnet.Helpers.Database
+﻿namespace BaseProjectDotnet.Helpers.Global.Models
 {
   public class DataTableResultModel
   {

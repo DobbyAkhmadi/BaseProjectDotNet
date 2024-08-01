@@ -1,5 +1,4 @@
-﻿using BaseProjectDotnet.Helpers.Database;
-using BaseProjectDotnet.Helpers.Global.Models;
+﻿using BaseProjectDotnet.Helpers.Global.Models;
 using BaseProjectDotnet.Services.AuditService;
 using BaseProjectDotnet.Services.UserService;
 using BaseProjectDotnet.Services.UserService.Model;
@@ -37,11 +36,11 @@ public class UserController(IUserService _userService, IAuditTrailService _audit
 
   [HttpPost]
   [Route("upsert")]
-  [ProducesResponseType(typeof(DbResponseResult), 200)]
+  [ProducesResponseType(typeof(ResponseResultModel), 200)]
   [ProducesResponseType(500)]
   public IActionResult Upsert([FromBody] UserModel model)
   {
-    DbResponseResult res;
+    ResponseResultModel res;
     try
     {
       // set required
@@ -84,11 +83,11 @@ public class UserController(IUserService _userService, IAuditTrailService _audit
 
   [HttpGet]
   [Route("detail")]
-  [ProducesResponseType(typeof(DbResponseResult), 200)]
+  [ProducesResponseType(typeof(ResponseResultModel), 200)]
   [ProducesResponseType(500)]
   public IActionResult Detail([FromForm] string id)
   {
-    var res = new DbResponseResult();
+    var res = new ResponseResultModel();
     try
     {
       res.Success = true;
@@ -105,11 +104,11 @@ public class UserController(IUserService _userService, IAuditTrailService _audit
 
   [HttpDelete]
   [Route("delete")]
-  [ProducesResponseType(typeof(DbResponseResult), 200)]
+  [ProducesResponseType(typeof(ResponseResultModel), 200)]
   [ProducesResponseType(500)]
   public IActionResult Delete([FromForm] string id)
   {
-    DbResponseResult res=new DbResponseResult();
+    ResponseResultModel res=new ResponseResultModel();
     try
     {
       if (ModelState.IsValid)
@@ -136,11 +135,11 @@ public class UserController(IUserService _userService, IAuditTrailService _audit
 
   [HttpPatch]
   [Route("restore")]
-  [ProducesResponseType(typeof(DbResponseResult), 200)]
+  [ProducesResponseType(typeof(ResponseResultModel), 200)]
   [ProducesResponseType(500)]
   public IActionResult Restore([FromForm] string id)
   {
-    DbResponseResult res;
+    ResponseResultModel res;
     try
     {
       if (ModelState.IsValid)

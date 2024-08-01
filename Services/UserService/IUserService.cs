@@ -8,8 +8,8 @@ namespace BaseProjectDotnet.Services.UserService;
 public interface IUserService
 {
   DataTableResultModel Index(DataTableRequestModel args);
-  DbResponseResult Upsert(UserModel userModel);
+  ResponseResultModel Upsert(UserModel userModel);
   UserModel GetById(string? id);
-  DbResponseResult Delete(string id);
-  DbResponseResult Restore(string id);
+  ResponseResultModel Delete(string id);
+  ResponseResultModel Restore(string id);
 }

@@ -1,6 +1,6 @@
 namespace BaseProjectDotnet.Helpers.Global.Models;
 
-public class DbResponseResult()
+public class ResponseResultModel()
 {
   public int StatusCode { get; set; } = 200;
   public bool Success { get; set; } = true;

@@ -10,67 +10,73 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
 {
   public DataTableResultModel Index(DataTableRequestModel args)
   {
-    List<AuditTrailDataTableModel> Result = [];
+    List<AuditTrailDataTableModel> result = [];
     var recordsTotal = AuditCount(args);
-    try
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpAuditTrailIndex, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+    sqlCommand.Parameters.AddWithValue("@Keywords", (args.search.value ?? "").Trim());
+    sqlCommand.Parameters.AddWithValue("@FromStart", args.start);
+    sqlCommand.Parameters.AddWithValue("@FromEnd", args.length);
+
+    if (args.order is { Count: > 0 })
     {
-      using var sqlConnection = _context.DConnection1();
-      using var sqlCommand = new SqlCommand(StaticSp.StpAuditTrailIndex, sqlConnection);
-      sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
-      sqlCommand.Parameters.AddWithValue("@Keywords", (args.search.value ?? "").Trim());
-      sqlCommand.Parameters.AddWithValue("@FromStart", args.start);
-      sqlCommand.Parameters.AddWithValue("@FromEnd", args.length);
       sqlCommand.Parameters.AddWithValue("@Sort", args.order[0]?.dir);
       sqlCommand.Parameters.AddWithValue("@FieldIndex", args.order[0].column);
-      sqlConnection.Open();
+    }
 
-      using (var dataReader = sqlCommand.ExecuteReader())
+    if (args.advSearch.Count > 0)
+    {
+      for (var index = 0; index < args.advSearch.Count; index++)
       {
-        while (dataReader.Read())
-        {
-          var model = new AuditTrailDataTableModel
-          {
-            id = dataReader["id"] != DBNull.Value ? dataReader["id"].ToString() : string.Empty,
-            user_id = dataReader["user_id"] != DBNull.Value ? dataReader["user_id"].ToString() : string.Empty,
-            user_name = dataReader["user_name"] != DBNull.Value ? dataReader["user_name"].ToString() : string.Empty,
-            role_id = dataReader["role_id"] != DBNull.Value ? dataReader["role_id"].ToString() : string.Empty,
-            role_name = dataReader["role_name"] != DBNull.Value ? dataReader["role_name"].ToString() : string.Empty,
-            remote_ip = dataReader["remote_ip"] != DBNull.Value ? dataReader["remote_ip"].ToString() : string.Empty,
-            session_id = dataReader["session_id"] != DBNull.Value ? dataReader["session_id"].ToString() : string.Empty,
-            action = dataReader["action"] != DBNull.Value ? dataReader["action"].ToString() : string.Empty,
-            function_name = dataReader["function_name"] != DBNull.Value
-              ? dataReader["function_name"].ToString()
-              : string.Empty,
-            message = dataReader["message"] != DBNull.Value ? dataReader["message"].ToString() : string.Empty,
-            old_model = dataReader["old_model"] != DBNull.Value ? dataReader["old_model"].ToString() : string.Empty,
-            new_model = dataReader["new_model"] != DBNull.Value ? dataReader["new_model"].ToString() : string.Empty,
-            latency = dataReader["latency"] != DBNull.Value ? dataReader["latency"].ToString() : string.Empty,
-            created_date = dataReader["created_date"] != DBNull.Value
-              ? Convert.ToDateTime(dataReader["created_date"])
-              : new DateTime()
-          };
-          Result.Add(model);
-        }
+        var item = args.advSearch.ElementAt(index);
+        sqlCommand.Parameters.AddWithValue("@" + item.Key, item.Value);
       }
-
-      if (sqlConnection.State != System.Data.ConnectionState.Closed)
-        sqlConnection.Close();
-
-    }
-    catch (Exception)
-    {
-      throw;
     }
 
-    return new DataTableResultModel()
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
     {
-      data = Result,
+      while (dataReader.Read())
+      {
+        var model = new AuditTrailDataTableModel
+        {
+          id = dataReader["id"] != DBNull.Value ? dataReader["id"].ToString() : string.Empty,
+          user_id = dataReader["user_id"] != DBNull.Value ? dataReader["user_id"].ToString() : string.Empty,
+          user_name = dataReader["user_name"] != DBNull.Value ? dataReader["user_name"].ToString() : string.Empty,
+          role_id = dataReader["role_id"] != DBNull.Value ? dataReader["role_id"].ToString() : string.Empty,
+          role_name = dataReader["role_name"] != DBNull.Value ? dataReader["role_name"].ToString() : string.Empty,
+          remote_ip = dataReader["remote_ip"] != DBNull.Value ? dataReader["remote_ip"].ToString() : string.Empty,
+          session_id = dataReader["session_id"] != DBNull.Value ? dataReader["session_id"].ToString() : string.Empty,
+          action = dataReader["action"] != DBNull.Value ? dataReader["action"].ToString() : string.Empty,
+          function_name = dataReader["function_name"] != DBNull.Value
+            ? dataReader["function_name"].ToString()
+            : string.Empty,
+          message = dataReader["message"] != DBNull.Value ? dataReader["message"].ToString() : string.Empty,
+          old_model = dataReader["old_model"] != DBNull.Value ? dataReader["old_model"].ToString() : string.Empty,
+          new_model = dataReader["new_model"] != DBNull.Value ? dataReader["new_model"].ToString() : string.Empty,
+          latency = dataReader["latency"] != DBNull.Value ? dataReader["latency"].ToString() : string.Empty,
+          created_date = dataReader["created_date"] != DBNull.Value
+            ? Convert.ToDateTime(dataReader["created_date"])
+            : new DateTime()
+        };
+        result.Add(model);
+      }
+    }
+
+    if (sqlConnection.State != System.Data.ConnectionState.Closed)
+      sqlConnection.Close();
+
+    return new DataTableResultModel
+    {
+      data = result,
       draw = args.draw,
       recordsTotal = recordsTotal,
       recordsFiltered = recordsTotal,
       error = null
     };
-}
+  }
 
   private int AuditCount(DataTableRequestModel args)
   {
@@ -100,14 +106,14 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
     return result;
   }
 
-  public DbResponseResult SaveAudit(AuditTrailModel auditTrailModel)
+  public ResponseResultModel SaveAudit(AuditTrailModel auditTrailModel)
   {
     return null;
   }
 
   public AuditTrailModel GetById(string id)
   {
-    AuditTrailModel Result = new();
+    AuditTrailModel result = new();
 
     using var sqlConnection = _context.DConnection1();
     using var sqlCommand = new SqlCommand(StaticSp.StpAuditTrailDetail, sqlConnection);
@@ -117,7 +123,7 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
 
     sqlConnection.Open();
 
-    using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+    using (var dataReader = sqlCommand.ExecuteReader())
     {
       while (dataReader.Read())
       {
@@ -142,7 +148,7 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
             ? Convert.ToDateTime(dataReader["created_date"])
             : new DateTime()
         };
-        Result = model;
+        result = model;
       }
 
       dataReader.Close();
@@ -150,78 +156,64 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
 
     sqlConnection.Close();
 
-    return Result;
+    return result;
   }
 
-  public DbResponseResult Archived(string id)
+  public ResponseResultModel Archived(string id)
   {
-    try
+    ResponseResultModel resultModel = new();
+
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpAuditTrailArchived, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+
+    sqlCommand.Parameters.AddWithValue("@ID", id);
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
     {
-      DbResponseResult Result = new();
-
-      using var sqlConnection = _context.DConnection1();
-      using var sqlCommand = new SqlCommand(StaticSp.StpAuditTrailArchived, sqlConnection);
-      sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
-
-      sqlCommand.Parameters.AddWithValue("@ID", id);
-
-      sqlConnection.Open();
-
-      using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+      while (dataReader.Read())
       {
-        while (dataReader.Read())
-        {
-          Result.Success = Convert.ToBoolean(dataReader["Code"]);
-          Result.Message = dataReader["Message"].ToString();
-          Result.Payload = dataReader["Payload"].ToString();
-        }
-
-        dataReader.Close();
+        resultModel.Success = Convert.ToBoolean(dataReader["Code"]);
+        resultModel.Message = dataReader["Message"].ToString();
+        resultModel.Payload = dataReader["Payload"].ToString();
       }
 
-      sqlConnection.Close();
+      dataReader.Close();
+    }
 
-      return Result;
-    }
-    catch (Exception)
-    {
-      throw;
-    }
+    sqlConnection.Close();
+
+    return resultModel;
   }
 
-  public DbResponseResult Restore(string id)
+  public ResponseResultModel Restore(string id)
   {
-    try
+    ResponseResultModel resultModel = new();
+
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpAuditTrailRestore, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+
+    sqlCommand.Parameters.AddWithValue("@ID", id);
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
     {
-      DbResponseResult Result = new();
-
-      using var sqlConnection = _context.DConnection1();
-      using var sqlCommand = new SqlCommand(StaticSp.StpAuditTrailRestore, sqlConnection);
-      sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
-
-      sqlCommand.Parameters.AddWithValue("@ID", id);
-
-      sqlConnection.Open();
-
-      using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+      while (dataReader.Read())
       {
-        while (dataReader.Read())
-        {
-          Result.Success = Convert.ToBoolean(dataReader["Code"]);
-          Result.Message = dataReader["Message"].ToString();
-          Result.Payload = dataReader["Payload"].ToString();
-        }
-
-        dataReader.Close();
+        resultModel.Success = Convert.ToBoolean(dataReader["Code"]);
+        resultModel.Message = dataReader["Message"].ToString();
+        resultModel.Payload = dataReader["Payload"].ToString();
       }
 
-      sqlConnection.Close();
+      dataReader.Close();
+    }
 
-      return Result;
-    }
-    catch (Exception)
-    {
-      throw;
-    }
+    sqlConnection.Close();
+
+    return resultModel;
   }
 }

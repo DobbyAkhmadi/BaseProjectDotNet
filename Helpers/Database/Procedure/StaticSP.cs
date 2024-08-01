@@ -2,6 +2,12 @@ namespace BaseProjectDotnet.Helpers.Database.Procedure;
 
 public abstract class StaticSp
 {
+  // User Authentication & Login
+  public const string? StpUserAuth = "[dbo].[SP_UserAuthentication]";
+  public const string? StpRolesUpsert = "[dbo].[SP_UserRolesUpsert]";
+  public const string? StpRolesDetail = "[dbo].[SP_UserRolesDetail]";
+  public const string? StpUserAccessList = "[dbo].[SP_UserAccessList]";
+
   // Audit Trail
   public const string? StpAuditTrailIndex = "[dbo].[SP_AuditTrailIndex]";
   public const string? StpAuditTrailIndexCount = "[dbo].[SP_AuditTrailIndexCount]";

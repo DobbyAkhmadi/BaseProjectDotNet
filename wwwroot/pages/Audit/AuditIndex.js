@@ -16,6 +16,7 @@ function initDataTable() {
       type: 'POST',
       contentType: "application/json",
       async: true,
+      headers: headerDefaultParam(),
       data: function (data) {
         data.columns.pop();
         return JSON.stringify(data);

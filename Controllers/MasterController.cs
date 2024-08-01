@@ -21,7 +21,7 @@ public class MasterController(IMasterService _masterService) : Controller
     }
     catch (Exception)
     {
-      return Json(new DbResponseResult()
+      return Json(new ResponseResultModel()
       {
         Success = true,
         Message = "Roles Select2",
@@ -42,7 +42,7 @@ public class MasterController(IMasterService _masterService) : Controller
     }
     catch (Exception)
     {
-      return Json(new DbResponseResult()
+      return Json(new ResponseResultModel()
       {
         Success = true,
         Message = "Status Select2",

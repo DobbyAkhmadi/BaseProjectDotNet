@@ -17,6 +17,7 @@ function initDataTable() {
       type: 'POST',
       contentType: "application/json",
       async: true,
+      headers: headerDefaultParam(),
       data: function (data) {
         data.TypeActive = convertIsDeleted($("#IsDeleted"));
         data.columns.pop();
@@ -251,6 +252,7 @@ $(document).on("click", ".add-new-role", function () {
 });
 
 function initSelect2() {
+
   $("#RolesSelect2").last().select2({
     allowClear: true,
     placeholder: 'Select Item',
@@ -286,6 +288,7 @@ function initSelect2() {
       }
     }
   });
+
   $("#StatusSelect2").last().select2({
     allowClear: true,
     placeholder: 'Select Item',
@@ -321,6 +324,7 @@ function initSelect2() {
       }
     }
   });
+
 }
 
 $(document).on("change", "#IsDeleted", function (e) {
@@ -330,25 +334,25 @@ $(document).on("change", "#IsDeleted", function (e) {
 
 $(document).on("click", ".add-new-user", function (e) {
   e.preventDefault();
-  $("#userModal").modal('show');
+  //$("#user-modal-form").modal('show');
 });
 
 $("#dataTableUser").on("click", ".item-detail", function (e) {
   e.preventDefault();
   let dataId = $(this).data('id');
-  alert(dataId);
+  $("#user-modal-detail").modal('show');
 });
 
 $("#dataTableUser").on("click", ".item-edit", function (e) {
   e.preventDefault();
   let dataId = $(this).data('id');
-  alert(dataId);
+//  alert(dataId);
 });
 
 $("#dataTableUser").on("click", ".item-change", function (e) {
   e.preventDefault();
   let dataId = $(this).data('id');
-  $("#userChangePasswordModal").modal('show');
+//  $("#user-modal-password").modal('show');
 });
 
 $("#dataTableUser").on("click", ".item-delete", function (e) {

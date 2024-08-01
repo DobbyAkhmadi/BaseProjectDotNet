@@ -9,9 +9,9 @@ namespace BaseProjectDotnet.Services.MasterService;
 
 public class MasterServiceDAL(DatabaseContext _context) : IMasterService
 {
-  public DbResponseResult RolesSelect2(string term, string page)
+  public ResponseResultModel RolesSelect2(string term, string page)
   {
-    var result = new DbResponseResult();
+    var result = new ResponseResultModel();
 
     var select2 = new List<Select2ResultModel>();
 
@@ -43,9 +43,9 @@ public class MasterServiceDAL(DatabaseContext _context) : IMasterService
     return result;
   }
 
-  public DbResponseResult StatusSelect2(string term, string page)
+  public ResponseResultModel StatusSelect2(string term, string page)
   {
-    var result = new DbResponseResult();
+    var result = new ResponseResultModel();
 
     var select2 = new List<Select2ResultModel>();
 

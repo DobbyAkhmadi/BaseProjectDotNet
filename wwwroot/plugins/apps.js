@@ -84,7 +84,84 @@ function isConfirm(title, content, confirm, cancel) {
   });
 }
 
+function headerDefaultParam() {
+  // Get the JWT token from the cookie
+  let token = getCookie('JwtToken');
+
+  // Return the headers object
+  return {
+    "Authorization": token ? "Bearer " + token : "", // Include "Bearer " prefix only if token is present
+    "Content-Type": "application/json"
+  };
+}
+
 function RequestAsync(method, url, dataType, data, callback, isLoading, toast) {
+  $.ajax({
+    type: method,
+    url: url,
+    data: data,
+    dataType: dataType,
+    async: true,
+    headers: headerDefaultParam(),
+    beforeSend: function () {
+      if (isLoading) {
+        startLoading();
+      }
+    },
+    success: callback,
+    error: function (xhr) {
+      if (isLoading) {
+        endLoading();
+        // log failed
+        responseError(xhr);
+      }
+    },
+  }).done(function (data) {
+    if (toast) {
+      showToast(data);
+    }
+    // log success
+
+    if (isLoading) {
+      endLoading();
+    }
+  });
+}
+
+function RequestAsyncLogin(method, url, dataType, data, callback, isLoading, toast) {
+  $.ajax({
+    type: method,
+    url: url,
+    data: data,
+    dataType: dataType,
+    async: true,
+    beforeSend: function () {
+      if (isLoading) {
+        startLoading();
+      }
+    },
+    success: callback,
+    error: function (xhr) {
+      if (isLoading) {
+        endLoading();
+        // log failed
+        responseError(xhr);
+      }
+    },
+  }).done(function (data) {
+    if (toast) {
+      showToast(data);
+    }
+    // log success
+
+    if (isLoading) {
+      endLoading();
+    }
+  });
+}
+
+function APIRequestAsync(method, url, dataType, data, callback, isLoading, toast, isSaveLog) {
+  let methodList = ['PUT', 'POST', 'PATCH', 'DELETE']
   $.ajax({
     type: method,
     url: url,
@@ -101,7 +178,13 @@ function RequestAsync(method, url, dataType, data, callback, isLoading, toast) {
     error: function (xhr) {
       if (isLoading) {
         endLoading();
-        alert(xhr.message)
+        // log failed
+        if (isSaveLog) {
+          if (method.contains(methodList)) {
+            // exec method log audit
+
+          }
+        }
       }
     },
   }).done(function (data) {
@@ -112,36 +195,7 @@ function RequestAsync(method, url, dataType, data, callback, isLoading, toast) {
     if (isLoading) {
       endLoading();
     }
-  });
-}
 
-function APIRequestAsync(method, url, dataType, data, callback, isLoading, toast, isSaveLog) {
-  $.ajax({
-    type: method,
-    url: url,
-    data: data,
-    dataType: dataType,
-    async: true,
-    headers: {'dataType': dataType},
-    beforeSend: function () {
-      if (isLoading) {
-        startLoading();
-      }
-    },
-    success: callback,
-    error: function (xhr) {
-      showToast("error", true, xhr);
-    },
-  }).done(function (data) {
-    if (toast) {
-      showToast("success", true, data);
-    }
-
-    if (isLoading) {
-      endLoading();
-    }
-
-    let methodList = ['PUT', 'POST', 'PATCH']
     if (isSaveLog) {
       if (method.contains(methodList)) {
         // exec method log audit
@@ -161,4 +215,40 @@ function convertIsDeleted(element) {
   const obj = $(element);
   // Check if the element is checked
   return obj.is(':checked') ? 3 : 1;
+}
+
+function responseError(xhr) {
+  switch (xhr.status) {
+    case 400:
+        window.location.href = '/internal/Home/Error?statusCode=400'; // Redirect to unauthorized page
+      break;
+    case 401:
+      window.location.href = '/internal/Home/Error?statusCode=401'; // Redirect to unauthorized page
+      break;
+    default:
+      window.location.href = '/internal/Home/Error?statusCode=500'; // Redirect to unauthorized page
+      break;
+  }
+}
+
+function isAlert(title, content) {
+  $.alert({
+    title: title,
+    content: content,
+    buttons: {
+      ok: {
+        text: 'Yes',
+        btnClass: 'btn-primary',
+        keys: ['enter'],
+      }
+    }
+  });
+}
+
+
+// Helper function to get a cookie value by name
+function getCookie(name) {
+  let value = "; " + document.cookie;
+  let parts = value.split("; " + name + "=");
+  if (parts.length === 2) return parts.pop().split(";").shift();
 }

@@ -5,5 +5,5 @@ namespace BaseProjectDotnet.Services.PersonService;
 
 public interface IPersonService
 {
-    DbResponseResult Upsert(PersonModel? model);
+    ResponseResultModel Upsert(PersonModel? model);
 }

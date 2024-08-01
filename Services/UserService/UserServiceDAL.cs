@@ -21,9 +21,23 @@ public class UserServiceData(DatabaseContext _context) : IUserService
       sqlCommand.Parameters.AddWithValue("@Keywords", (args.search.value ?? "").Trim());
       sqlCommand.Parameters.AddWithValue("@FromStart", args.start);
       sqlCommand.Parameters.AddWithValue("@FromEnd", args.length);
-      sqlCommand.Parameters.AddWithValue("@Sort", args.order[0]?.dir);
-      sqlCommand.Parameters.AddWithValue("@FieldIndex", args.order[0].column);
       sqlCommand.Parameters.AddWithValue("@TypeActive", args.TypeActive);
+
+      if (args.order is { Count: > 0 })
+      {
+        sqlCommand.Parameters.AddWithValue("@Sort", args.order[0]?.dir);
+        sqlCommand.Parameters.AddWithValue("@FieldIndex", args.order[0].column);
+      }
+
+      if (args.advSearch.Count > 0)
+      {
+        for (var index = 0; index < args.advSearch.Count; index++)
+        {
+          var item = args.advSearch.ElementAt(index);
+          sqlCommand.Parameters.AddWithValue("@" + item.Key, item.Value);
+        }
+      }
+
       sqlConnection.Open();
 
       using (var dataReader = sqlCommand.ExecuteReader())
@@ -92,9 +106,9 @@ public class UserServiceData(DatabaseContext _context) : IUserService
     return result;
   }
 
-  public DbResponseResult Upsert(UserModel model)
+  public ResponseResultModel Upsert(UserModel model)
   {
-    DbResponseResult result = new();
+    ResponseResultModel resultModel = new();
     using var sqlConnection = _context.DConnection1();
     using var sqlCommand = new SqlCommand(StaticSp.StpUserUpsert, sqlConnection);
     sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
@@ -111,9 +125,9 @@ public class UserServiceData(DatabaseContext _context) : IUserService
     {
       while (dataReader.Read())
       {
-        result.Success = Convert.ToBoolean(dataReader["Code"]);
-        result.Message = dataReader["Message"].ToString();
-        result.Payload = dataReader["Payload"].ToString();
+        resultModel.Success = Convert.ToBoolean(dataReader["Code"]);
+        resultModel.Message = dataReader["Message"].ToString();
+        resultModel.Payload = dataReader["Payload"].ToString();
       }
 
       dataReader.Close();
@@ -121,7 +135,7 @@ public class UserServiceData(DatabaseContext _context) : IUserService
 
     sqlConnection.Close();
 
-    return result;
+    return resultModel;
   }
 
   public UserModel GetById(string? id)
@@ -150,9 +164,9 @@ public class UserServiceData(DatabaseContext _context) : IUserService
     return result;
   }
 
-  public DbResponseResult Delete(string id)
+  public ResponseResultModel Delete(string id)
   {
-    DbResponseResult result = new();
+    ResponseResultModel resultModel = new();
 
     using var sqlConnection = _context.DConnection1();
     using var sqlCommand = new SqlCommand(StaticSp.StpUserDelete, sqlConnection);
@@ -166,20 +180,20 @@ public class UserServiceData(DatabaseContext _context) : IUserService
     {
       while (dataReader.Read())
       {
-        result.Success = Convert.ToBoolean(dataReader["Code"]);
-        result.Message = dataReader["Message"].ToString();
-        result.Payload = dataReader["Payload"].ToString();
+        resultModel.Success = Convert.ToBoolean(dataReader["Code"]);
+        resultModel.Message = dataReader["Message"].ToString();
+        resultModel.Payload = dataReader["Payload"].ToString();
       }
       dataReader.Close();
     }
     sqlConnection.Close();
 
-    return result;
+    return resultModel;
   }
 
-  public DbResponseResult Restore(string id)
+  public ResponseResultModel Restore(string id)
   {
-    DbResponseResult result = new();
+    ResponseResultModel resultModel = new();
 
     using var sqlConnection = _context.DConnection1();
     using var sqlCommand = new SqlCommand(StaticSp.StpUserRestore, sqlConnection);
@@ -193,14 +207,14 @@ public class UserServiceData(DatabaseContext _context) : IUserService
     {
       while (dataReader.Read())
       {
-        result.Success = Convert.ToBoolean(dataReader["Code"]);
-        result.Message = dataReader["Message"].ToString();
-        result.Payload = dataReader["Payload"].ToString();
+        resultModel.Success = Convert.ToBoolean(dataReader["Code"]);
+        resultModel.Message = dataReader["Message"].ToString();
+        resultModel.Payload = dataReader["Payload"].ToString();
       }
       dataReader.Close();
     }
     sqlConnection.Close();
 
-    return result;
+    return resultModel;
   }
 }
