@@ -102,13 +102,13 @@ public class UserController(IUserService _userService, IAuditTrailService _audit
     return Ok(res);
   }
 
-  [HttpDelete]
+  [HttpPost]
   [Route("delete")]
   [ProducesResponseType(typeof(ResponseResultModel), 200)]
   [ProducesResponseType(500)]
   public IActionResult Delete([FromForm] string id)
   {
-    ResponseResultModel res=new ResponseResultModel();
+    ResponseResultModel res = new ResponseResultModel();
     try
     {
       if (ModelState.IsValid)
@@ -133,7 +133,7 @@ public class UserController(IUserService _userService, IAuditTrailService _audit
     return Ok(res);
   }
 
-  [HttpPatch]
+  [HttpPost]
   [Route("restore")]
   [ProducesResponseType(typeof(ResponseResultModel), 200)]
   [ProducesResponseType(500)]
@@ -164,15 +164,84 @@ public class UserController(IUserService _userService, IAuditTrailService _audit
     return Ok(res);
   }
 
+  [HttpPost]
+  [Route("change-password")]
+  [ProducesResponseType(typeof(ResponseResultModel), 200)]
+  [ProducesResponseType(500)]
+  public IActionResult Change([FromForm] string user_id, string new_password)
+  {
+    ResponseResultModel res;
+    try
+    {
+      if (ModelState.IsValid)
+      {
+        //    DbResponseResult oldModel = _userService.GetById(model.id);
+        res = _userService.ChangePassword(user_id, new_password);
+        if (res.Success)
+        {
+          //  AuditTrail.SaveAuditTrail(model, oldModel, null, "Delete Pangkalan", "PANGKALAN.DELETE", UserIdentity.IdUser.ToString(), UserIdentity.RoleName.ToString(), GroupAccessAuditTail.AuditTrailGroupAccessDDMS);
+        }
+      }
+      else
+      {
+        return BadRequest(ModelState);
+      }
+    }
+    catch (Exception ex)
+    {
+      return StatusCode(500, ex.Message);
+    }
+
+    return Ok(res);
+  }
+
   [Route("Roles")]
   public IActionResult Roles()
   {
     return View("Roles/Index");
   }
 
+  [HttpPost("Roles/index-post")]
+  public IActionResult RolesIndex([FromBody] DataTableRequestModel args)
+  {
+    try
+    {
+      return Ok(_userService.RolesIndex(args));
+    }
+    catch (Exception exception)
+    {
+      return Json(new DataTableResultModel()
+      {
+        recordsTotal = 0,
+        data = new List<RoleDataTableModel>(),
+        draw = args.draw,
+        error = exception.Message
+      });
+    }
+  }
+
   [Route("Permission")]
   public IActionResult Permission()
   {
     return View("Permission/Index");
+  }
+
+  [HttpPost("Permission/index-post")]
+  public IActionResult PermissionIndex([FromBody] DataTableRequestModel args)
+  {
+    try
+    {
+      return Ok(_userService.PermissionIndex(args));
+    }
+    catch (Exception exception)
+    {
+      return Json(new DataTableResultModel()
+      {
+        recordsTotal = 0,
+        data = new List<PermissionDataTableModel>(),
+        draw = args.draw,
+        error = exception.Message
+      });
+    }
   }
 }

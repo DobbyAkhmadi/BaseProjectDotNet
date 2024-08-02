@@ -2,7 +2,6 @@
 using BaseProjectDotnet.Helpers.Database;
 using BaseProjectDotnet.Helpers.Database.Procedure;
 using BaseProjectDotnet.Helpers.Global.Models;
-using BaseProjectDotnet.Services.AuditService.Model;
 using BaseProjectDotnet.Services.UserService.Model;
 
 namespace BaseProjectDotnet.Services.UserService;
@@ -11,65 +10,177 @@ public class UserServiceData(DatabaseContext _context) : IUserService
 {
   public DataTableResultModel Index(DataTableRequestModel args)
   {
-    List<UserDataTableModel> Result = [];
+    List<UserDataTableModel> result = [];
     var recordsTotal = UserCount(args);
-    try
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpUserIndex, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+    sqlCommand.Parameters.AddWithValue("@Keywords", (args.search.value ?? "").Trim());
+    sqlCommand.Parameters.AddWithValue("@FromStart", args.start);
+    sqlCommand.Parameters.AddWithValue("@FromEnd", args.length);
+    sqlCommand.Parameters.AddWithValue("@TypeActive", args.TypeActive);
+
+    if (args.order is { Count: > 0 })
     {
-      using var sqlConnection = _context.DConnection1();
-      using var sqlCommand = new SqlCommand(StaticSp.StpUserIndex, sqlConnection);
-      sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
-      sqlCommand.Parameters.AddWithValue("@Keywords", (args.search.value ?? "").Trim());
-      sqlCommand.Parameters.AddWithValue("@FromStart", args.start);
-      sqlCommand.Parameters.AddWithValue("@FromEnd", args.length);
-      sqlCommand.Parameters.AddWithValue("@TypeActive", args.TypeActive);
-
-      if (args.order is { Count: > 0 })
-      {
-        sqlCommand.Parameters.AddWithValue("@Sort", args.order[0]?.dir);
-        sqlCommand.Parameters.AddWithValue("@FieldIndex", args.order[0].column);
-      }
-
-      if (args.advSearch.Count > 0)
-      {
-        for (var index = 0; index < args.advSearch.Count; index++)
-        {
-          var item = args.advSearch.ElementAt(index);
-          sqlCommand.Parameters.AddWithValue("@" + item.Key, item.Value);
-        }
-      }
-
-      sqlConnection.Open();
-
-      using (var dataReader = sqlCommand.ExecuteReader())
-      {
-        while (dataReader.Read())
-        {
-          var model = new UserDataTableModel
-          {
-            id = dataReader["id"] != DBNull.Value ? dataReader["id"].ToString() : string.Empty,
-            full_name = dataReader["full_name"] != DBNull.Value ? dataReader["full_name"].ToString() : string.Empty,
-            user_name = dataReader["user_name"] != DBNull.Value ? dataReader["user_name"].ToString() : string.Empty,
-            role_name = dataReader["role_name"] != DBNull.Value ? dataReader["role_name"].ToString() : string.Empty,
-            email = dataReader["email"] != DBNull.Value ? dataReader["email"].ToString() : string.Empty,
-            type_active = dataReader["type_active"] != DBNull.Value
-              ? dataReader["type_active"].ToString()
-              : string.Empty
-          };
-          Result.Add(model);
-        }
-      }
-
-      if (sqlConnection.State != System.Data.ConnectionState.Closed)
-        sqlConnection.Close();
+      sqlCommand.Parameters.AddWithValue("@Sort", args.order[0]?.dir);
+      sqlCommand.Parameters.AddWithValue("@FieldIndex", args.order[0].column);
     }
-    catch (Exception)
+
+    if (args.advSearch.Count > 0)
     {
-      throw;
+      for (var index = 0; index < args.advSearch.Count; index++)
+      {
+        var item = args.advSearch.ElementAt(index);
+        sqlCommand.Parameters.AddWithValue("@" + item.Key, item.Value);
+      }
     }
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
+    {
+      while (dataReader.Read())
+      {
+        var model = new UserDataTableModel
+        {
+          id = dataReader["id"] != DBNull.Value ? dataReader["id"].ToString() : string.Empty,
+          full_name = dataReader["full_name"] != DBNull.Value ? dataReader["full_name"].ToString() : string.Empty,
+          user_name = dataReader["user_name"] != DBNull.Value ? dataReader["user_name"].ToString() : string.Empty,
+          role_name = dataReader["role_name"] != DBNull.Value ? dataReader["role_name"].ToString() : string.Empty,
+          email = dataReader["email"] != DBNull.Value ? dataReader["email"].ToString() : string.Empty,
+          type_active = dataReader["type_active"] != DBNull.Value
+            ? dataReader["type_active"].ToString()
+            : string.Empty
+        };
+        result.Add(model);
+      }
+    }
+
+    if (sqlConnection.State != System.Data.ConnectionState.Closed)
+      sqlConnection.Close();
 
     return new DataTableResultModel
     {
-      data = Result,
+      data = result,
+      draw = args.draw,
+      recordsTotal = recordsTotal,
+      recordsFiltered = recordsTotal,
+      error = null
+    };
+  }
+
+  public DataTableResultModel RolesIndex(DataTableRequestModel args)
+  {
+    List<RoleDataTableModel> result = [];
+    var recordsTotal = RoleCount(args);
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpRolesIndex, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+    sqlCommand.Parameters.AddWithValue("@Keywords", (args.search.value ?? "").Trim());
+    sqlCommand.Parameters.AddWithValue("@FromStart", args.start);
+    sqlCommand.Parameters.AddWithValue("@FromEnd", args.length);
+    sqlCommand.Parameters.AddWithValue("@TypeActive", args.TypeActive);
+
+    if (args.order is { Count: > 0 })
+    {
+      sqlCommand.Parameters.AddWithValue("@Sort", args.order[0]?.dir);
+      sqlCommand.Parameters.AddWithValue("@FieldIndex", args.order[0].column);
+    }
+
+    if (args.advSearch.Count > 0)
+    {
+      for (var index = 0; index < args.advSearch.Count; index++)
+      {
+        var item = args.advSearch.ElementAt(index);
+        sqlCommand.Parameters.AddWithValue("@" + item.Key, item.Value);
+      }
+    }
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
+    {
+      while (dataReader.Read())
+      {
+        var model = new RoleDataTableModel()
+        {
+          id = dataReader["id"] != DBNull.Value ? dataReader["id"].ToString() : string.Empty,
+          name = dataReader["name"] != DBNull.Value ? dataReader["name"].ToString() : string.Empty,
+          description = dataReader["description"] != DBNull.Value ? dataReader["description"].ToString() : string.Empty,
+          type_active = dataReader["type_active"] != DBNull.Value
+            ? dataReader["type_active"].ToString()
+            : string.Empty
+        };
+        result.Add(model);
+      }
+    }
+
+    if (sqlConnection.State != System.Data.ConnectionState.Closed)
+      sqlConnection.Close();
+
+    return new DataTableResultModel
+    {
+      data = result,
+      draw = args.draw,
+      recordsTotal = recordsTotal,
+      recordsFiltered = recordsTotal,
+      error = null
+    };
+  }
+
+  public DataTableResultModel PermissionIndex(DataTableRequestModel args)
+  {
+     List<PermissionDataTableModel> result = [];
+    var recordsTotal = PermissionCount(args);
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpPermissionIndex, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+    sqlCommand.Parameters.AddWithValue("@Keywords", (args.search.value ?? "").Trim());
+    sqlCommand.Parameters.AddWithValue("@FromStart", args.start);
+    sqlCommand.Parameters.AddWithValue("@FromEnd", args.length);
+    sqlCommand.Parameters.AddWithValue("@TypeActive", args.TypeActive);
+
+    if (args.order is { Count: > 0 })
+    {
+      sqlCommand.Parameters.AddWithValue("@Sort", args.order[0]?.dir);
+      sqlCommand.Parameters.AddWithValue("@FieldIndex", args.order[0].column);
+    }
+
+    if (args.advSearch.Count > 0)
+    {
+      for (var index = 0; index < args.advSearch.Count; index++)
+      {
+        var item = args.advSearch.ElementAt(index);
+        sqlCommand.Parameters.AddWithValue("@" + item.Key, item.Value);
+      }
+    }
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
+    {
+      while (dataReader.Read())
+      {
+        var model = new PermissionDataTableModel()
+        {
+          id = dataReader["id"] != DBNull.Value ? dataReader["id"].ToString() : string.Empty,
+          name = dataReader["name"] != DBNull.Value ? dataReader["name"].ToString() : string.Empty,
+          router = dataReader["router"] != DBNull.Value ? dataReader["router"].ToString() : string.Empty,
+          description = dataReader["description"] != DBNull.Value ? dataReader["description"].ToString() : string.Empty,
+          type_active = dataReader["type_active"] != DBNull.Value
+            ? dataReader["type_active"].ToString()
+            : string.Empty
+        };
+        result.Add(model);
+      }
+    }
+
+    if (sqlConnection.State != System.Data.ConnectionState.Closed)
+      sqlConnection.Close();
+
+    return new DataTableResultModel
+    {
+      data = result,
       draw = args.draw,
       recordsTotal = recordsTotal,
       recordsFiltered = recordsTotal,
@@ -84,6 +195,64 @@ public class UserServiceData(DatabaseContext _context) : IUserService
     {
       using var sqlConnection = _context.DConnection1();
       using var sqlCommand = new SqlCommand(StaticSp.StpUserIndexCount, sqlConnection);
+      sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+      sqlCommand.Parameters.AddWithValue("@Keywords", (args.search.value ?? "").Trim());
+      sqlCommand.Parameters.AddWithValue("@TypeActive", args.TypeActive);
+      sqlConnection.Open();
+      using (var dataReader = sqlCommand.ExecuteReader())
+      {
+        while (dataReader.Read())
+        {
+          result = (int)dataReader[0];
+        }
+      }
+
+      sqlConnection.Close();
+    }
+    catch
+    {
+      return 0;
+    }
+
+    return result;
+  }
+
+  private int RoleCount(DataTableRequestModel args)
+  {
+    var result = 0;
+    try
+    {
+      using var sqlConnection = _context.DConnection1();
+      using var sqlCommand = new SqlCommand(StaticSp.StpRolesIndexCount, sqlConnection);
+      sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+      sqlCommand.Parameters.AddWithValue("@Keywords", (args.search.value ?? "").Trim());
+      sqlCommand.Parameters.AddWithValue("@TypeActive", args.TypeActive);
+      sqlConnection.Open();
+      using (var dataReader = sqlCommand.ExecuteReader())
+      {
+        while (dataReader.Read())
+        {
+          result = (int)dataReader[0];
+        }
+      }
+
+      sqlConnection.Close();
+    }
+    catch
+    {
+      return 0;
+    }
+
+    return result;
+  }
+
+  private int PermissionCount(DataTableRequestModel args)
+  {
+    var result = 0;
+    try
+    {
+      using var sqlConnection = _context.DConnection1();
+      using var sqlCommand = new SqlCommand(StaticSp.StpPermissionIndexCount, sqlConnection);
       sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
       sqlCommand.Parameters.AddWithValue("@Keywords", (args.search.value ?? "").Trim());
       sqlCommand.Parameters.AddWithValue("@TypeActive", args.TypeActive);
@@ -184,8 +353,10 @@ public class UserServiceData(DatabaseContext _context) : IUserService
         resultModel.Message = dataReader["Message"].ToString();
         resultModel.Payload = dataReader["Payload"].ToString();
       }
+
       dataReader.Close();
     }
+
     sqlConnection.Close();
 
     return resultModel;
@@ -211,8 +382,40 @@ public class UserServiceData(DatabaseContext _context) : IUserService
         resultModel.Message = dataReader["Message"].ToString();
         resultModel.Payload = dataReader["Payload"].ToString();
       }
+
       dataReader.Close();
     }
+
+    sqlConnection.Close();
+
+    return resultModel;
+  }
+
+  public ResponseResultModel ChangePassword(string user_id, string new_password)
+  {
+    ResponseResultModel resultModel = new();
+
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpUserChangePassword, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+
+    sqlCommand.Parameters.AddWithValue("@ID", user_id);
+    sqlCommand.Parameters.AddWithValue("@NewPassword", new_password);
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
+    {
+      while (dataReader.Read())
+      {
+        resultModel.Success = Convert.ToBoolean(dataReader["Code"]);
+        resultModel.Message = dataReader["Message"].ToString();
+        resultModel.Payload = dataReader["Payload"].ToString();
+      }
+
+      dataReader.Close();
+    }
+
     sqlConnection.Close();
 
     return resultModel;

@@ -54,7 +54,7 @@
         <div class="d-flex justify-content-between align-items-end">
           <div class="role-heading">
             <h5 class="mb-1">Manager</h5>
-            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#addRoleModal" class="role-edit-modal">
+            <a href="javascript:;" data-bs-toggle="modal" class="role-edit-modal">
               <span>Edit Role</span>
             </a>
           </div>
@@ -159,34 +159,27 @@
       </div>
     </div>
   </div>
-  <div class="col-xl-4 col-lg-6 col-md-6">
-    <div class="card h-100">
-      <div class="row h-100">
-        <div class="col-sm-5">
-          <div class="d-flex align-items-end h-100 justify-content-center mt-sm-0 mt-4">
-            <img src="/img/illustrations/auth-login-illustration-dark.png" class="img-fluid mt-sm-4 mt-md-0" alt="add-new-roles" width="83">
-          </div>
-        </div>
-        <div class="col-sm-7">
-          <div class="card-body text-sm-end text-center ps-sm-0">
-            <button data-bs-target="#addRoleModal" data-bs-toggle="modal" class="btn btn-sm btn-primary mb-4 text-nowrap add-new-role waves-effect waves-light">
-              Add New Role
-            </button>
-            <p class="mb-0">
-              Add new role, <br>
-              if it doesn't exist.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+
   <div class="col-12">
     <h4 class="mt-6 mb-1">Total users with their roles</h4>
     <p class="mb-0">Find all of your company’s administrator accounts and their associate roles.</p>
   </div>
   <div class="col-12">
+    <div class="card-datatable table-responsive pt-0">
+      <table class="datatables-basic table" id="dataTableRoles">
+        <thead>
+        <tr>
+          <th>Role Name</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
 
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 

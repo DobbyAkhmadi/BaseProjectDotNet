@@ -96,111 +96,22 @@ function initDataTable() {
           {
             extend: 'print',
             text: '<i class="ti ti-printer me-2" ></i>Print',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [1, 2, 3, 4, 5],
-              // prevent avatar to be print
-              format: {
-                body: function (inner, coldex, rowdex) {
-                  if (inner.length <= 0) return inner;
-                  var el = $.parseHTML(inner);
-                  var result = '';
-                  $.each(el, function (index, item) {
-                    if (item.classList !== undefined && item.classList.contains('user-name')) {
-                      result = result + item.lastChild.firstChild.textContent;
-                    } else if (item.innerText === undefined) {
-                      result = result + item.textContent;
-                    } else result = result + item.innerText;
-                  });
-                  return result;
-                }
-              }
-            },
-            customize: function (win) {
-              //customize print view for dark
-              $(win.document.body)
-                .css('color', headingColor)
-                .css('border-color', borderColor)
-                .css('background-color', bodyBg);
-              $(win.document.body)
-                .find('table')
-                .addClass('compact')
-                .css('color', 'inherit')
-                .css('border-color', 'inherit')
-                .css('background-color', 'inherit');
-            }
+            className: 'dropdown-item'
           },
           {
             extend: 'csv',
             text: '<i class="ti ti-file-text me-2" ></i>Csv',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [1, 2, 3, 4, 5],
-              // prevent avatar to be display
-              format: {
-                body: function (inner, coldex, rowdex) {
-                  if (inner.length <= 0) return inner;
-                  var el = $.parseHTML(inner);
-                  var result = '';
-                  $.each(el, function (index, item) {
-                    if (item.classList !== undefined && item.classList.contains('user-name')) {
-                      result = result + item.lastChild.firstChild.textContent;
-                    } else if (item.innerText === undefined) {
-                      result = result + item.textContent;
-                    } else result = result + item.innerText;
-                  });
-                  return result;
-                }
-              }
-            }
+            className: 'dropdown-item'
           },
           {
             extend: 'excel',
             text: '<i class="ti ti-file-spreadsheet me-2"></i>Excel',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [1, 2, 3, 4, 5],
-              // prevent avatar to be display
-              format: {
-                body: function (inner, coldex, rowdex) {
-                  if (inner.length <= 0) return inner;
-                  var el = $.parseHTML(inner);
-                  var result = '';
-                  $.each(el, function (index, item) {
-                    if (item.classList !== undefined && item.classList.contains('user-name')) {
-                      result = result + item.lastChild.firstChild.textContent;
-                    } else if (item.innerText === undefined) {
-                      result = result + item.textContent;
-                    } else result = result + item.innerText;
-                  });
-                  return result;
-                }
-              }
-            }
+            className: 'dropdown-item'
           },
           {
             extend: 'pdf',
             text: '<i class="ti ti-file-code-2 me-2"></i>Pdf',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [1, 2, 3, 4, 5],
-              // prevent avatar to be display
-              format: {
-                body: function (inner, coldex, rowdex) {
-                  if (inner.length <= 0) return inner;
-                  var el = $.parseHTML(inner);
-                  var result = '';
-                  $.each(el, function (index, item) {
-                    if (item.classList !== undefined && item.classList.contains('user-name')) {
-                      result = result + item.lastChild.firstChild.textContent;
-                    } else if (item.innerText === undefined) {
-                      result = result + item.textContent;
-                    } else result = result + item.innerText;
-                  });
-                  return result;
-                }
-              }
-            }
+            className: 'dropdown-item'
           }
         ]
       },
@@ -246,35 +157,3 @@ $("#btn-click").on("click", async function () {
 
 });
 
-$('#TypeTransport').last().select2({
-  width: '100%',
-  placeholder: 'select',
-  minimumInputLength: 0
-  //,
-  // ajax: {
-  //   url: 'master/TypeTransportSelect2',
-  //   dataType: 'json',
-  //   delay: 0,
-  //   cache: true,
-  //   data: function (param) {
-  //     return {
-  //       q: param,
-  //     };
-  //   },
-  //   processResults: function (data, params) {
-  //     var output = [];
-  //     var results = data.Payload;
-  //     if (results) {
-  //       $.each(results, function (index) {
-  //         output.push({
-  //           'id': results[index]['id'],
-  //           'text': results[index]['text']
-  //         });
-  //       });
-  //     }
-  //     return {
-  //       results: output
-  //     };
-  //   }
-  // }
-});

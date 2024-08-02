@@ -1,19 +1,18 @@
 $(document).ready(async function () {
   await initDataTable();
-  await initSelect2();
 });
 
 var datatable;
 
 function initDataTable() {
-  datatable = $('#dataTableUser').DataTable({
+  datatable = $('#dataTableRoles').DataTable({
     iDisplayLength: 25,
     processing: true,
     serverSide: true,
     ordering: true,
     responsive: true,
     ajax: {
-      url: "/internal/User/index-post",
+      url: "/internal/User/Roles/index-post",
       type: 'POST',
       contentType: "application/json",
       async: true,
@@ -36,10 +35,8 @@ function initDataTable() {
       }
     },
     columns: [
-      {"data": "full_name"},
-      {"data": "user_name"},
-      {"data": "role_name"},
-      {"data": "email"},
+      {"data": "name"},
+      {"data": "description"},
       {
         "data": "type_active",
         'className': 'text-center',
@@ -69,7 +66,6 @@ function initDataTable() {
           } else {
             action += '<a title="Detail" data-id="' + item.id + '" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill item-detail"><i class="ti ti-eye ti-md" style="color: lightslategray;"></i></a>';
             action += '<a title="Edit" data-id="' + item.id + '" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill item-edit"><i class="ti ti-pencil ti-md" style="color: green;"></i></a>';
-            action += '<a title="Change Password" data-id="' + item.id + '" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill item-change"><i class="ti ti-lock-open ti-md" style="color: cornflowerblue;"></i></a>';
             action += '<a title="Delete" data-id="' + item.id + '" class="btn btn-icon btn-text-danger waves-effect waves-light rounded-pill item-delete"><i class="ti ti-trash ti-md" style="color: red;"></i></a>';
           }
           action += '</div>';
@@ -104,6 +100,7 @@ function initDataTable() {
     },
     lengthMenu: [10, 25, 50, 75, 100],
     // Buttons with Dropdown
+    // Buttons with Dropdown
     buttons: [
       {
         extend: 'collection',
@@ -134,7 +131,7 @@ function initDataTable() {
       },
       {
         text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs "></i>' +
-          '<span class="d-none d-sm-inline-block add-new-user">Add New User</span>',
+          '<span class="d-none d-sm-inline-block add-new-roles">Add New Roles</span>',
         className: 'add-new btn btn-primary waves-effect waves-light',
         attr: {
           'data-bs-toggle': 'offcanvas',
@@ -159,151 +156,11 @@ function initDataTable() {
     '</label>');
 }
 
-$(document).on("click", ".add-new-role", function () {
-  $("#modal-role").modal('show');
-});
-
-function initSelect2() {
-  $("#RolesSelect2").last().select2({
-    allowClear: true,
-    placeholder: 'Select Item',
-    minimumInputLength: 0,
-    ajax: {
-      url: 'Master/roles-select2',
-      dataType: 'json',
-      delay: 0,
-      async: true,
-      cache: true,
-      data: function (param) {
-        return {
-          q: param
-        };
-      },
-      processResults: function (data, params) {
-        var output = [];
-        var results = data.payload;
-        if (results) {
-          $.each(results, function (index) {
-            output.push({
-              'id': results[index]['id'],
-              'text': results[index]['text']
-            });
-          });
-        }
-        return {
-          results: output,
-          pagination: {
-            more: data.payload.length >= 20 ? true : false
-          }
-        }
-      }
-    }
-  });
-}
-
 $(document).on("change", "#IsDeleted", function (e) {
   e.preventDefault();
   datatable.draw();
 });
 
-$(document).on("click", ".add-new-user", async function (e) {
-  e.preventDefault();
-  await initSelect2Modal();
-  $("#user-modal-form").modal('show');
+$(document).on("click",".add-new-roles",function (){
+  $("#role-modal").modal('show');
 });
-
-$("#dataTableUser").on("click", ".item-detail", function (e) {
-  e.preventDefault();
-  let dataId = $(this).data('id');
-  $("#user-modal-detail").modal('show');
-});
-
-$("#dataTableUser").on("click", ".item-edit", async function (e) {
-  e.preventDefault();
-  let dataId = $(this).data('id');
-  await initSelect2Modal();
-  $("#user-modal-form").modal('show');
-});
-
-$("#dataTableUser").on("click", ".item-change", function (e) {
-  e.preventDefault();
- // let dataId = $(this).data('id');
-  $("#user-modal-password").modal('show');
-});
-
-$("#dataTableUser").on("click", ".item-delete", function (e) {
-  e.preventDefault();
-  let url = "/internal/User/delete"
-  let dataId = $(this).data('id');
-  let form = {
-    id: dataId
-  }
-
-  confirm = function () {
-    RequestAsync("POST", url, "json", form, function (response) {
-      if (response.success == true) {
-        datatable.draw();
-      }
-    }, true, true);
-  }
-  isConfirm('Delete Confirmation', 'Are you sure want to <b>delete</b> this data ?', confirm)
-});
-
-$("#dataTableUser").on("click", ".item-restore", function (e) {
-  e.preventDefault();
-  let url = "/internal/User/restore"
-  let dataId = $(this).data('id');
-  let form = {
-    id: dataId
-  }
-
-  confirm = function () {
-    RequestAsync("POST", url, "json", form, function (response) {
-      if (response.success == true) {
-        datatable.draw();
-      }
-    }, true, true);
-  }
-  isConfirm('Restore Confirmation', 'Are you sure want to <b>restore</b> this data ?', confirm)
-});
-
-function initSelect2Modal(){
-  $("#Roles-Select2-Modal").select2({
-    allowClear: true,
-    placeholder: 'Select Item',
-    minimumInputLength: 0,
-    dropdownParent: $("#user-modal-form"),
-    ajax: {
-      url: 'Master/roles-select2',
-      dataType: 'json',
-      delay: 0,
-      async: true,
-      cache: true,
-      data: function (param) {
-        return {
-          q: param
-        };
-      },
-      processResults: function (data, params) {
-        var output = [];
-        var results = data.payload;
-        if (results) {
-          $.each(results, function (index) {
-            output.push({
-              'id': results[index]['id'],
-              'text': results[index]['text']
-            });
-          });
-        }
-        return {
-          results: output,
-          pagination: {
-            more: data.payload.length >= 20 ? true : false
-          }
-        }
-      }
-    }
-  });
-}
-
-

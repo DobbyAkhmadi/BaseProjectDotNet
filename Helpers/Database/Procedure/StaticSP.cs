@@ -4,6 +4,13 @@ public abstract class StaticSp
 {
   // User Authentication & Login
   public const string? StpUserAuth = "[dbo].[SP_UserAuthentication]";
+  public const string? StpUserChangePassword = "[dbo].[SP_UserChangePassword]";
+  public const string? StpRolesIndex = "[dbo].[SP_UserRolesIndex]";
+  public const string? StpRolesIndexCount = "[dbo].[SP_UserRolesIndexCount]";
+
+  public const string? StpPermissionIndex = "[dbo].[SP_UserPermissionIndex]";
+  public const string? StpPermissionIndexCount = "[dbo].[SP_UserPermissionIndexCount]";
+
   public const string? StpRolesUpsert = "[dbo].[SP_UserRolesUpsert]";
   public const string? StpRolesDetail = "[dbo].[SP_UserRolesDetail]";
   public const string? StpUserAccessList = "[dbo].[SP_UserAccessList]";

@@ -1,4 +1,4 @@
-﻿<div class="modal fade" id="modal-role">
+﻿<div class="modal fade" id="role-modal" data-bs-backdrop="static" tabindex="-1">
 <div class="modal-dialog modal-lg modal-simple modal-dialog-centered">
   <div class="modal-content">
     <div class="modal-body">
@@ -45,9 +45,13 @@
                       <input class="form-check-input" type="checkbox" id="userManagementWrite">
                       <label class="form-check-label" for="userManagementWrite"> Write </label>
                     </div>
+                    <div class="form-check mb-0 me-lg-12">
+                      <input class="form-check-input" type="checkbox" id="userManagementDelete">
+                      <label class="form-check-label" for="userManagementDelete"> Delete </label>
+                    </div>
                     <div class="form-check mb-0">
-                      <input class="form-check-input" type="checkbox" id="userManagementCreate">
-                      <label class="form-check-label" for="userManagementCreate"> Create </label>
+                      <input class="form-check-input" type="checkbox" id="userManagementRestore">
+                      <label class="form-check-label" for="userManagementRestore"> Restore </label>
                     </div>
                   </div>
                 </td>
@@ -57,16 +61,20 @@
                 <td>
                   <div class="d-flex justify-content-end">
                     <div class="form-check mb-0 me-4 me-lg-12">
-                      <input class="form-check-input" type="checkbox" id="contentManagementRead">
-                      <label class="form-check-label" for="contentManagementRead"> Read </label>
+                      <input class="form-check-input" type="checkbox" id="userManagementRead">
+                      <label class="form-check-label" for="userManagementRead"> Read </label>
                     </div>
                     <div class="form-check mb-0 me-4 me-lg-12">
-                      <input class="form-check-input" type="checkbox" id="contentManagementWrite">
-                      <label class="form-check-label" for="contentManagementWrite"> Write </label>
+                      <input class="form-check-input" type="checkbox" id="userManagementWrite">
+                      <label class="form-check-label" for="userManagementWrite"> Write </label>
+                    </div>
+                    <div class="form-check mb-0 me-lg-12">
+                      <input class="form-check-input" type="checkbox" id="userManagementDelete">
+                      <label class="form-check-label" for="userManagementDelete"> Delete </label>
                     </div>
                     <div class="form-check mb-0">
-                      <input class="form-check-input" type="checkbox" id="contentManagementCreate">
-                      <label class="form-check-label" for="contentManagementCreate"> Create </label>
+                      <input class="form-check-input" type="checkbox" id="userManagementRestore">
+                      <label class="form-check-label" for="userManagementRestore"> Restore </label>
                     </div>
                   </div>
                 </td>
@@ -76,16 +84,20 @@
                 <td>
                   <div class="d-flex justify-content-end">
                     <div class="form-check mb-0 me-4 me-lg-12">
-                      <input class="form-check-input" type="checkbox" id="dbManagementRead">
-                      <label class="form-check-label" for="dbManagementRead"> Read </label>
+                      <input class="form-check-input" type="checkbox" id="userManagementRead">
+                      <label class="form-check-label" for="userManagementRead"> Read </label>
                     </div>
                     <div class="form-check mb-0 me-4 me-lg-12">
-                      <input class="form-check-input" type="checkbox" id="dbManagementWrite">
-                      <label class="form-check-label" for="dbManagementWrite"> Write </label>
+                      <input class="form-check-input" type="checkbox" id="userManagementWrite">
+                      <label class="form-check-label" for="userManagementWrite"> Write </label>
+                    </div>
+                    <div class="form-check mb-0 me-lg-12">
+                      <input class="form-check-input" type="checkbox" id="userManagementDelete">
+                      <label class="form-check-label" for="userManagementDelete"> Delete </label>
                     </div>
                     <div class="form-check mb-0">
-                      <input class="form-check-input" type="checkbox" id="dbManagementCreate">
-                      <label class="form-check-label" for="dbManagementCreate"> Create </label>
+                      <input class="form-check-input" type="checkbox" id="userManagementRestore">
+                      <label class="form-check-label" for="userManagementRestore"> Restore </label>
                     </div>
                   </div>
                 </td>
@@ -96,16 +108,20 @@
                 <td>
                   <div class="d-flex justify-content-end">
                     <div class="form-check mb-0 me-4 me-lg-12">
-                      <input class="form-check-input" type="checkbox" id="apiRead">
-                      <label class="form-check-label" for="apiRead"> Read </label>
+                      <input class="form-check-input" type="checkbox" id="userManagementRead">
+                      <label class="form-check-label" for="userManagementRead"> Read </label>
                     </div>
                     <div class="form-check mb-0 me-4 me-lg-12">
-                      <input class="form-check-input" type="checkbox" id="apiWrite">
-                      <label class="form-check-label" for="apiWrite"> Write </label>
+                      <input class="form-check-input" type="checkbox" id="userManagementWrite">
+                      <label class="form-check-label" for="userManagementWrite"> Write </label>
+                    </div>
+                    <div class="form-check mb-0 me-lg-12">
+                      <input class="form-check-input" type="checkbox" id="userManagementDelete">
+                      <label class="form-check-label" for="userManagementDelete"> Delete </label>
                     </div>
                     <div class="form-check mb-0">
-                      <input class="form-check-input" type="checkbox" id="apiCreate">
-                      <label class="form-check-label" for="apiCreate"> Create </label>
+                      <input class="form-check-input" type="checkbox" id="userManagementRestore">
+                      <label class="form-check-label" for="userManagementRestore"> Restore </label>
                     </div>
                   </div>
                 </td>
@@ -116,9 +132,8 @@
           <!-- Permission table -->
         </div>
         <div class="col-12 text-center">
-          <button type="submit" class="btn btn-primary me-3 waves-effect waves-light">Submit</button>
-          <button type="reset" class="btn btn-label-secondary waves-effect" data-bs-dismiss="modal" aria-label="Close">
-            Cancel
+          <button type="submit" class="btn btn-primary me-2">
+            <span class="tf-icons ti-xs ti ti-device-floppy me-2"></span>Save
           </button>
         </div>
         <input type="hidden"></form>

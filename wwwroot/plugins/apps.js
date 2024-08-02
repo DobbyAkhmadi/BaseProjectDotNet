@@ -102,7 +102,7 @@ function RequestAsync(method, url, dataType, data, callback, isLoading, toast) {
     data: data,
     dataType: dataType,
     async: true,
-    headers: headerDefaultParam(),
+  //  headers: headerDefaultParam(),
     beforeSend: function () {
       if (isLoading) {
         startLoading();
@@ -219,9 +219,9 @@ function convertIsDeleted(element) {
 
 function responseError(xhr) {
   switch (xhr.status) {
-    case 400:
-        window.location.href = '/internal/Home/Error?statusCode=400'; // Redirect to unauthorized page
-      break;
+    // case 400:
+    //     window.location.href = '/internal/Home/Error?statusCode=400'; // Redirect to unauthorized page
+    //   break;
     case 401:
       window.location.href = '/internal/Home/Error?statusCode=401'; // Redirect to unauthorized page
       break;
