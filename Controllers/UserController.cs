@@ -1,6 +1,7 @@
-﻿using BaseProjectDotnet.Helpers.Enum;
-using BaseProjectDotnet.Helpers.Global.Models;
+﻿using BaseProjectDotnet.Helpers.Global.Models;
 using BaseProjectDotnet.Services.AuditService;
+using BaseProjectDotnet.Services.MasterService;
+using BaseProjectDotnet.Services.MasterService.Modals;
 using BaseProjectDotnet.Services.UserService;
 using BaseProjectDotnet.Services.UserService.Model;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,7 @@ namespace BaseProjectDotnet.Controllers;
 [ApiController]
 [Route("/internal/[controller]")]
 [Authorize]
-public class UserController(IUserService _userService, IAuditTrailService _audit) : Controller
+public class UserController(IUserService _userService, IMasterService _master, IAuditTrailService _audit) : Controller
 {
   public IActionResult Index()
   {
@@ -21,8 +22,28 @@ public class UserController(IUserService _userService, IAuditTrailService _audit
   [HttpGet("get-form")]
   public IActionResult Form(string id, int type)
   {
+    var dataModel = new GeneralDataModel();
+
+    ViewBag.Title = type switch
+    {
+      1 => "Detail",
+      2 => "Add",
+      3 => "Update",
+      4 => "Change Password",
+      _ => ViewBag.Title
+    };
+
     ViewBag.FormStatus = type;
-    return View("~/Views/User/Modals/ModalDetail.cshtml");
+    ViewBag.RolesSelect2 = _master.RolesSelect2("", "").Payload ?? "";
+
+    dataModel.UserModel = _userService.GetById(id);
+
+    if (type == 4)
+    {
+      return View("~/Views/User/Modals/CPassword.cshtml", dataModel);
+    }
+
+    return View("~/Views/User/Modals/Form.cshtml", dataModel);
   }
 
   [HttpPost("index-post")]

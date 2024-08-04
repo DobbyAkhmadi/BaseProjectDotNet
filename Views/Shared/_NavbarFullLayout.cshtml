@@ -7,33 +7,23 @@
   @* Display elements *@
   ViewData["isNavbar"] = (ViewData["isNavbar"] ??= true);
   ViewData["isMenu"] = (ViewData["isMenu"] ??= true);
-  ViewData["isFlex"] = (ViewData["isFlex"] ??= false);
+  ViewData["isFlex"] = (ViewData["isFlex"] ??= true);
   ViewData["isFooter"] = (ViewData["isFooter"] ??= true);
 
   @*HTML Classes *@
   ViewData["menuFixed"] = (ViewData["menuFixed"] ?? "layout-menu-fixed");
   ViewData["navbarType"] = (ViewData["navbarType"] ?? "layout-navbar-fixed");
-   // ViewData["footerFixed"] = (ViewData["footerFixed"] ?? "layout-footer-fixed");
-   //  ViewData["menuCollapsed"] = (ViewData["menuCollapsed"] ?? "layout-menu-collapsed");
-   // ViewData["menuFlipped"] = (ViewData["menuFlipped"] ?? "layout-menu-flipped");
-    // ViewData["menuOffcanvas"] = (ViewData["menuOffcanvas"] ?? "layout-menu-offcanvas");
+  // ViewData["footerFixed"] = (ViewData["footerFixed"] ?? "layout-footer-fixed");
+  // ViewData["menuCollapsed"] = (ViewData["menuCollapsed"] ?? "layout-menu-collapsed");
+  // ViewData["menuFlipped"] = (ViewData["menuFlipped"] ?? "layout-menu-flipped");
+  // ViewData["menuOffcanvas"] = (ViewData["menuOffcanvas"] ?? "layout-menu-offcanvas");
 
   @*Content classes *@
-  ViewData["container"] = (ViewData["container"] ?? "container-xxl");
-  TempData.Keep();
+ // ViewData["container"] = (ViewData["container"] ?? "container-xxl");
 }
 
-
-@section VendorStyles{ @RenderSection("VendorStyles", required: false)}
-
-@section PageStyles{ @RenderSection("PageStyles", required: false)}
-
-@section VendorScripts{ @RenderSection("VendorScripts", required: false)}
-
-@section PageScripts{ @RenderSection("PageScripts", required: false)}
-
 <div class='layout-wrapper layout-navbar-full @((@ViewData["isMenu"] != null && Convert.ToBoolean(@ViewData["isMenu"])) ? "" : "layout-without-menu")'>
-  <div class='layout-container'>
+  <div class="layout-container">
 
     <!-- Navbar -->
     @if (Convert.ToBoolean(@ViewData["isNavbar"]))
@@ -54,7 +44,7 @@
       <div class="content-wrapper">
 
         <!-- Content -->
-        <div class='@ViewData["container"] @((Convert.ToBoolean(@ViewData["isFlex"])) ? "d-flex align-items-stretch flex-grow-1 p-0" : "flex-grow-1 container-p-y")'>
+        <div class='@ViewData["container"] @((Convert.ToBoolean(@ViewData["isFlex"])) ? "d-flex align-items-stretch flex-grow-1 p-0" : "flex-grow-2 container-p-y")'>
           @RenderBody()
         </div>
         <!-- / Content -->

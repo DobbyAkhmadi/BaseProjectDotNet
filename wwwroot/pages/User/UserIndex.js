@@ -85,13 +85,13 @@ function initDataTable() {
     ],
     dom:
       '<"row"' +
-      '<"col-md-4 d-flex align-items-center"l>' +
-      '<"col-md-8 d-flex justify-content-end align-items-center"fB>' +
+        '<"col-md-4 d-flex align-items-center"l>' +
+        '<"col-md-8 d-flex justify-content-end align-items-center"fB>' +
       '>' +
       't' +
       '<"row"' +
-      '<"col-md-4"i>' +
-      '<"col-md-4"p>' +
+        '<"col-md-4"i>' +
+        '<"col-md-4"p>' +
       '>',
     language: {
       sLengthMenu: '_MENU_',
@@ -152,10 +152,10 @@ function initDataTable() {
   //Add a checkbox after the Select2 element
   $('.dataTables_length').append(
     '<label>' +
-    '<input class="form-check-input" ' +
-    'style="margin-left: 25%" ' +
-    'type="checkbox" ' +
-    'id="IsDeleted" /> Data Terhapus' +
+      '<input class="form-check-input" ' +
+      'style="margin-left: 25%" ' +
+      'type="checkbox" ' +
+      'id="IsDeleted" /> Data Terhapus' +
     '</label>');
 }
 
@@ -208,13 +208,27 @@ $(document).on("change", "#IsDeleted", function (e) {
 
 $(document).on("click", ".add-new-user", async function (e) {
   e.preventDefault();
-  await initSelect2Modal();
-  $("#user-modal-form").modal('show');
+  // information
+  // ENUM View = 1, Insert = 2, Update = 3, change pwd = 4
+
+  let url = "/internal/User/get-form"
+  let form = {
+    id: 0,
+    type: 2
+  }
+  RequestAsync("GET", url, "html", form, async function (response) {
+    $("#user-container-modal").html(response);
+    await initSelect2Modal();
+    $("#user-modal").modal('show');
+  }, true, true);
 });
 
 $("#dataTableUser").on("click", ".item-detail", function (e) {
   e.preventDefault();
-  //ENUM View = 1, Insert = 2, Update = 3,
+
+  // information
+  // ENUM View = 1, Insert = 2, Update = 3, change pwd = 4
+
   let url = "/internal/User/get-form"
   let dataId = $(this).data('id');
   let form = {
@@ -222,28 +236,45 @@ $("#dataTableUser").on("click", ".item-detail", function (e) {
     type: 1
   }
   RequestAsync("GET", url, "html", form, function (response) {
-    if (response.success == true) {
-      console.log(response)
-      $("#user-container-modal").html(response);
-
-      $(document).ready(function (){
-        $("#user-modal-detail").modal('show');
-      });
-    }
+    $("#user-container-modal").html(response);
+    $("#user-modal").modal('show');
   }, true, true);
 });
 
 $("#dataTableUser").on("click", ".item-edit", async function (e) {
   e.preventDefault();
+  // information
+  // ENUM View = 1, Insert = 2, Update = 3, change pwd = 4
+
+  let url = "/internal/User/get-form"
   let dataId = $(this).data('id');
-  await initSelect2Modal();
-  $("#user-modal-form").modal('show');
+  let form = {
+    id: dataId,
+    type: 3
+  }
+  RequestAsync("GET", url, "html", form, async function (response) {
+    $("#user-container-modal").html(response);
+    await initSelect2Modal();
+    $("#user-modal").modal('show');
+  }, true, true);
+
 });
 
 $("#dataTableUser").on("click", ".item-change", function (e) {
   e.preventDefault();
-  // let dataId = $(this).data('id');
-  $("#user-modal-password").modal('show');
+  // information
+  // ENUM View = 1, Insert = 2, Update = 3, change pwd = 4
+
+  let url = "/internal/User/get-form"
+  let dataId = $(this).data('id');
+  let form = {
+    id: dataId,
+    type: 4
+  }
+  RequestAsync("GET", url, "html", form, async function (response) {
+    $("#user-container-modal").html(response);
+    $("#user-modal").modal('show');
+  }, true, true);
 });
 
 $("#dataTableUser").on("click", ".item-delete", function (e) {
@@ -287,7 +318,7 @@ function initSelect2Modal() {
     allowClear: true,
     placeholder: 'Select Item',
     minimumInputLength: 0,
-    dropdownParent: $("#user-modal-form"),
+    dropdownParent: $("#user-modal"),
     ajax: {
       url: 'Master/roles-select2',
       dataType: 'json',

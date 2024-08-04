@@ -47,7 +47,7 @@
       <li class="menu-divider mb-0"></li>
       <li class="menu-header small fw-medium">User Management</li>
       <li class="menu-item @(((isActive == users)||(isActive==userRoles)||(isActive==userPermission)) ? "open" : "")">
-        <a class="menu-link menu-toggle">
+        <a class="menu-link menu-toggle" href="@users">
           <i class="menu-icon ti ti ti-users"></i>
           <div>
             Users
@@ -85,7 +85,7 @@
       <li class="menu-divider mb-0"></li>
       <li class="menu-header small fw-medium">Audit Management</li>
       <li class="menu-item @(isActive == audit ? "open" : "")">
-        <a class="menu-link menu-toggle">
+        <a class="menu-link menu-toggle" href="@audit">
           <i class="menu-icon ti ti-alarm-plus"></i>
           <div>
             Audit Trail

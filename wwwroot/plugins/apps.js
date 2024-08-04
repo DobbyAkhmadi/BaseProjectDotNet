@@ -268,6 +268,13 @@ function responseError(xhr) {
     case 401:
       window.location.href = '/internal/Home/Error?statusCode=401'; // Redirect to unauthorized page
       break;
+    default:
+      let data = {
+        success : false,
+        message : xhr.responseJSON
+      }
+      showToast(data);
+      break;
   }
 }
 function isAlert(title, content) {

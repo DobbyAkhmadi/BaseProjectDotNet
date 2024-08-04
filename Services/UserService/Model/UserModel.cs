@@ -37,7 +37,7 @@ public class UserModel
   public string password { get; set; }
   public string? email { get; set; }
   public Roles? Roles { get; set; }
-  public string type_active { get; set; }
+  public string? type_active { get; set; }
 }
 
 public class Roles

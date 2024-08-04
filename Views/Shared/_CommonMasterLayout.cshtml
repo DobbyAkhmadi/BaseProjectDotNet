@@ -1,23 +1,23 @@
 @using BaseProjectDotnet.Helpers.Global
 @{
   @* using this variables to load front pages assets *@
-  bool isFront = ViewData["isFront"] is bool isFrontValue ? isFrontValue : false;
-  ViewData["main"] = isFront ? "front-" : "";
-  ViewData["frontVar"] = isFront ? "Front" : "";
+  var isFront = ViewData["isFront"] is bool and true;
+  //  ViewData["main"] = isFront ? "front-" : "";
+  //ViewData["frontVar"] = isFront ? "Front" : "";
+
   @* Compact/Fluid class *@
-  ViewData["contentType"] = ViewData["container"] is string container && container == "container-xxl" ? "layout-compact" : "layout-wide";
-  var appName = @GlobalVariable.App_Title;
+  ViewData["contentType"] = ViewData["container"] is string container and "container-xxl" ? "layout-compact" : "layout-wide";
+  const string appName = @GlobalVariable.App_Title;
   var title = ViewContext.RouteData.Values["controller"]?.ToString();
 }
 
 @inject IHttpContextAccessor httpContextAccessor
 
 <!DOCTYPE html>
-<html lang="en"
-      class='light-style @(ViewData["navbarType"] is string navbarType ? navbarType : "") @(ViewData["menuFixed"] is string menuFixed ? menuFixed : "") @(ViewData["menuCollapsed"] is string menuCollapsed ? menuCollapsed : "") @(ViewData["contentType"] is string contentType ? contentType : "") @(ViewData["footerFixed"] is string footerFixed ? footerFixed : "") @(ViewData["customizerHidden"] is string customizerHidden ? customizerHidden : "")'
-      dir="ltr" data-theme="theme-default" data-assets-path='@((httpContextAccessor.HttpContext?.Request.PathBase ?? "") + "/")'
+<html lang="en" class='light-style @(ViewData["navbarType"] is string navbarType ? navbarType : "") @(ViewData["menuFixed"] is string menuFixed ? menuFixed : "") @(ViewData["menuCollapsed"] is string menuCollapsed ? menuCollapsed : "") @(ViewData["contentType"] is string contentType ? contentType : "") @(ViewData["footerFixed"] is string footerFixed ? footerFixed : "") @(ViewData["customizerHidden"] is string customizerHidden ? customizerHidden : "")'
+      dir="ltr" data-theme="theme-default"
+      data-assets-path='@((httpContextAccessor.HttpContext?.Request.PathBase ?? "") + "/")'
       data-template='@(isFront ? "front-page" : (Convert.ToBoolean(TempData.Peek("menuHorizontal")?.ToString()) ? "horizontal-menu-template" : "vertical-menu-template"))'>
-
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
@@ -28,35 +28,24 @@
   <link rel="icon" type="image/x-icon" href="~/img/favicon/favicon.ico"/>
 
   <!-- Core Styles -->
-  @await Html.PartialAsync("Sections/_Styles" + ViewData["frontVar"])
-
-  <!-- Vendor Styles -->
-  @RenderSection("VendorStyles", required: false)
-
-  <!-- Page Styles -->
-  @RenderSection("PageStyles", required: false)
+  @await Html.PartialAsync("Sections/_Styles")
 
 </head>
 
 <body>
+
 <!-- Layout Content -->
- @RenderBody()
+@RenderBody()
 <!--/ Layout Content -->
 
 <!-- Core Scripts -->
-@await Html.PartialAsync("Sections/_Scripts" + ViewData["frontVar"])
-
-<!-- Vendor Scripts -->
-@RenderSection("VendorScripts", required: false)
+@await Html.PartialAsync("Sections/_Scripts")
 
 <!-- Global Plugins Scripts -->
 <script src="~/plugins/apps.js"></script>
 
 <!-- Pages Scripts -->
 <script src="~/pages/@(ViewContext.RouteData.Values["controller"]?.ToString())/@(ViewContext.RouteData.Values["controller"]! + ViewContext.RouteData.Values["action"]!.ToString()).js"></script>
-
-<!-- Page Scripts-->
-@RenderSection("PageScripts", required: false)
 
 </body>
 

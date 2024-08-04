@@ -130,7 +130,7 @@ public class UserServiceData(DatabaseContext _context) : IUserService
 
   public DataTableResultModel PermissionIndex(DataTableRequestModel args)
   {
-     List<PermissionDataTableModel> result = [];
+    List<PermissionDataTableModel> result = [];
     var recordsTotal = PermissionCount(args);
     using var sqlConnection = _context.DConnection1();
     using var sqlCommand = new SqlCommand(StaticSp.StpPermissionIndex, sqlConnection);
@@ -323,6 +323,13 @@ public class UserServiceData(DatabaseContext _context) : IUserService
     {
       while (dataReader.Read())
       {
+        result.id = dataReader["id"] != DBNull.Value ? dataReader["id"].ToString() : string.Empty;
+        result.full_name = dataReader["full_name"] != DBNull.Value ? dataReader["full_name"].ToString() : string.Empty;
+        result.user_name = dataReader["user_name"] != DBNull.Value ? dataReader["user_name"].ToString() : string.Empty;
+        result.email = dataReader["email"] != DBNull.Value ? dataReader["email"].ToString() : string.Empty;
+        result.id_roles = dataReader["id_roles"] != DBNull.Value ? dataReader["id_roles"].ToString() : string.Empty;
+        result.role_name = dataReader["role_name"] != DBNull.Value ? dataReader["role_name"].ToString() : string.Empty;
+        result.type_active = dataReader["type_active"] != DBNull.Value ? dataReader["type_active"].ToString() : string.Empty;
       }
 
       dataReader.Close();
