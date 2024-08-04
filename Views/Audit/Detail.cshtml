@@ -43,17 +43,10 @@
                 <button type="button" class="btn btn-secondary me-2">
                   <span class="tf-icons ti-xs ti ti-arrow-back me-2"></span> Clear
                 </button>
-                </div>
+              </div>
             </div>
           </div>
           <div class="col-4">
-            <div class="row form-group">
-              <div class="mb-3">
-                <label for="defaultFormControlInput" class="form-label">Name</label>
-                <input type="text" class="form-control" id="defaultFormControlInput" placeholder="John Doe" aria-describedby="defaultFormControlHelp"/>
-                <div id="defaultFormControlHelp" class="form-text"></div>
-              </div>
-            </div>
             <div class="row form-group">
               <div class="mb-3">
                 <label for="defaultFormControlInput" class="form-label">Name</label>
@@ -83,22 +76,18 @@
   </div>
 
   <div class="card-datatable table-responsive pt-0">
-    <table class="datatables-basic table" id="dataTable">
+    <table class="datatables-basic table" id="dataTableAudit">
       <thead>
-        <tr>
-          <th>User Name</th>
-          <th>Role Name</th>
-          <th>Remote IP</th>
-          <th>Session ID</th>
-          <th>Action</th>
-          <th>Function Name</th>
-          <th>Message</th>
-          <th>Old Model</th>
-          <th>New Model</th>
-          <th>Latency</th>
-          <th>Created Date</th>
-          <th>Actions</th>
-        </tr>
+      <tr>
+        <th>User</th>
+        <th>Role</th>
+        <th>Remote IP</th>
+        <th>Function</th>
+        <th>SP Name</th>
+        <th>Message</th>
+        <th>Created Date</th>
+        <th>Actions</th>
+      </tr>
       </thead>
       <tbody>
 
@@ -106,4 +95,8 @@
     </table>
   </div>
 
+</div>
+
+<div id="container-audit">
+  @await Html.PartialAsync("Modals/Detail")
 </div>

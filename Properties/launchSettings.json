@@ -11,8 +11,10 @@
   "profiles": {
     "http": {
       "commandName": "Project",
+      "commandLineArgs": "dotnet watch",
       "dotnetRunMessages": true,
       "launchBrowser": true,
+      "hotReloadEnabled" : true,
       "applicationUrl": "http://localhost:8080",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

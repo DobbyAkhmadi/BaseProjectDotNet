@@ -8,6 +8,7 @@ using BaseProjectDotnet.Services.PersonService;
 using BaseProjectDotnet.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Load configuration values from appsettings.{Environment}.json
@@ -30,22 +31,35 @@ builder.Services.AddAuthentication(options =>
   })
   .AddJwtBearer(options =>
   {
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-      ValidateIssuer = true,
-      ValidateAudience = true,
-      ValidateLifetime = true,
-      ValidateIssuerSigningKey = true,
-      ValidIssuer = jwtIssuer,
-      ValidAudience = jwtIssuer,
-      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
-    };
+    if (jwtKey != null)
+      options.TokenValidationParameters = new TokenValidationParameters
+      {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+      };
   });
+
+builder.Services.AddCors(options =>
+{
+  options.AddDefaultPolicy(
+    policy =>
+    {
+      policy.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
 
 // Build the application
 var app = builder.Build();
@@ -53,13 +67,14 @@ var app = builder.Build();
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage(); // Show detailed exception information in development
+  app.UseDeveloperExceptionPage(); // Show detailed exception information in development
 }
 else
 {
-    app.UseExceptionHandler("/internal/Home/Error?statusCode=500"); // Custom error handling in production
-    app.UseHsts(); // Default HSTS value is 30 days. Consider changing for production scenarios, see https://aka.ms/aspnetcore-hsts
+  app.UseExceptionHandler("/internal/Home/Error?statusCode=500"); // Custom error handling in production
+  app.UseHsts(); // Default HSTS value is 30 days. Consider changing for production scenarios, see https://aka.ms/aspnetcore-hsts
 }
+
 // Use status code pages for error responses
 app.UseStatusCodePages(context =>
 {
@@ -73,6 +88,7 @@ app.UseStatusCodePages(context =>
       response.Redirect("/internal/Home/Error?statusCode=403");
       break;
   }
+
   return Task.CompletedTask;
 });
 // app.UseHttpsRedirection(); // Uncomment if you want to enforce HTTPS redirection
@@ -82,7 +98,7 @@ app.UseMiddleware<JwtMiddleware>();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseCors();
 app.MapControllers();
 app.MapControllerRoute(
   name: "default",

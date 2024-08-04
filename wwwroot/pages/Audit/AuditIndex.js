@@ -5,7 +5,7 @@ $(document).ready(async function () {
 var datatable;
 
 function initDataTable() {
-  datatable = $('#dataTable').DataTable({
+  datatable = $('#dataTableAudit').DataTable({
     iDisplayLength: 25,
     processing: true,
     serverSide: true,
@@ -18,6 +18,7 @@ function initDataTable() {
       async: true,
       headers: headerDefaultParam(),
       data: function (data) {
+        data.TypeActive = convertIsArchived($("#IsDeleted"));
         data.columns.pop();
         return JSON.stringify(data);
       },
@@ -34,28 +35,25 @@ function initDataTable() {
       }
     },
     columns: [
-      { "data": "user_name" },
-      { "data": "role_name" },
-      { "data": "remote_ip" },
-      { "data": "session_id" },
-      { "data": "action" },
-      { "data": "function_name" },
-      { "data": "message" },
-      { "data": "old_model" },
-      { "data": "new_model" },
-      { "data": "latency" },
-      { "data": "created_date" },
+      {"data": "user_name"},
+      {"data": "role_name"},
+      {"data": "remote_ip"},
+      {"data": "action"},
+      {"data": "function_name"},
+      {"data": "message"},
+      {"data": "created_date"},
       {
         'className': 'text-center',
         'sortable': false,
         'render': function (data, type, item, meta) {
-         // console.log(item)
-          let action = '<div class="action">';
-          action += '<a title="Detail" class="btn btn-icon btn-text-success  waves-effect waves-light rounded-pill"><i class="ti ti-eye ti-md" style="color: green;"></i></a>';
-          action += '<a title="Archived" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-archive ti-md" style="color: blueviolet;"></i></a>';
-        //  action += '<a title="Edit" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-pencil ti-md"></i></a>';
-        //  action += '<a title="Delete" class="btn btn-icon btn-text-danger waves-effect waves-light rounded-pill"><i class="ti ti-trash ti-md"></i></a>';
-        //  action += '<a title="Restore" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill"><i class="ti ti-restore ti-md"></i></a>';
+          let action = '<div class="action-index">';
+          if (item.type_active == "5") {
+            action += '<a title="Detail" data-id="' + item.id + '" class="btn btn-icon btn-text-success  waves-effect waves-light rounded-pill item-detail"><i class="ti ti-eye ti-md" style="color: green;"></i></a>';
+            action += '<a title="Restore" data-id="' + item.id + '" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill item-restore"><i class="ti ti-restore ti-md"></i></a>';
+          } else {
+            action += '<a title="Detail" data-id="' + item.id + '" class="btn btn-icon btn-text-success  waves-effect waves-light rounded-pill item-detail"><i class="ti ti-eye ti-md" style="color: green;"></i></a>';
+            action += '<a title="Archived" data-id="' + item.id + '" class="btn btn-icon btn-text-success waves-effect waves-light rounded-pill item-archive"><i class="ti ti-archive ti-md" style="color: blueviolet;"></i></a>';
+          }
           action += '</div>';
           return action;
         }
@@ -64,17 +62,18 @@ function initDataTable() {
     columnDefs: [
       {
         defaultContent: "-",
-        targets: "_all"}
+        targets: "_all"
+      }
     ],
     dom:
       '<"row"' +
-        '<"col-md-4 d-flex align-items-center"l>' +
-        '<"col-md-8 d-flex justify-content-end align-items-center"fB>' +
+      '<"col-md-4 d-flex align-items-center"l>' +
+      '<"col-md-8 d-flex justify-content-end align-items-center"fB>' +
       '>' +
       't' +
       '<"row"' +
-        '<"col-md-4"i>' +
-        '<"col-md-4"p>' +
+      '<"col-md-4"i>' +
+      '<"col-md-4"p>' +
       '>',
     language: {
       sLengthMenu: '_MENU_',
@@ -114,14 +113,6 @@ function initDataTable() {
             className: 'dropdown-item'
           }
         ]
-      },
-      {
-        text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add New User</span>',
-        className: 'add-new btn btn-primary waves-effect waves-light',
-        attr: {
-          'data-bs-toggle': 'offcanvas',
-          'data-bs-target': '#offcanvasAddUser'
-        }
       }
     ]
   });
@@ -145,15 +136,63 @@ $(document).on("click", ".add-new", function () {
   datatable.draw();
 });
 
-$("#btn-click").on("click", async function () {
-  let form = {
-    Success: true,
-    Message: "xxxxxxx"
-  }
-  confirm = function () {
-    showToast(form)
-  }
-  isConfirm('Delete Confirmation', 'Are you sure want to <b>delete</b> this data ?', confirm)
 
+$("#dataTableAudit").on("click", ".item-archive", function (e) {
+  e.preventDefault();
+  let url = "/internal/Audit/archive"
+  let dataId = $(this).data('id');
+  let form = {
+    id: dataId
+  }
+
+  confirm = function () {
+    RequestAsync("POST", url, "json", form, function (response) {
+      if (response.success == true) {
+        datatable.draw();
+      }
+    }, true, true);
+  }
+  isConfirm('Archive Confirmation', 'Are you sure want to <b>archive</b> this data ?', confirm)
 });
 
+$(document).on("change", "#IsDeleted", function (e) {
+  e.preventDefault();
+  datatable.draw();
+});
+
+
+$("#dataTableAudit").on("click", ".item-restore", function (e) {
+  e.preventDefault();
+  let url = "/internal/Audit/restore"
+  let dataId = $(this).data('id');
+  let form = {
+    id: dataId
+  }
+
+  confirm = function () {
+    RequestAsync("POST", url, "json", form, function (response) {
+      if (response.success == true) {
+        datatable.draw();
+      }
+    }, true, true);
+  }
+  isConfirm('Restore Confirmation', 'Are you sure want to <b>restore</b> this data ?', confirm)
+});
+
+$("#dataTableAudit").on("click", ".item-detail", function (e) {
+  e.preventDefault();
+  let url = "/internal/Audit/detail"
+  let dataId = $(this).data('id');
+  let form = {
+    id: dataId
+  }
+  RequestAsync("GET", url, "json", form, function (response) {
+    let payload = response.payload;
+    if (response.success == true) {
+      for (const [key, value] of Object.entries(payload)) {
+        $("." + key).text(value ? value : "-");
+      }
+      $("#audit-modal-detail").modal('show');
+    }
+  }, true, true);
+});

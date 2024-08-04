@@ -2,14 +2,14 @@ using System.Data.SqlClient;
 using BaseProjectDotnet.Helpers.Database;
 using BaseProjectDotnet.Helpers.Database.Procedure;
 using BaseProjectDotnet.Helpers.Global.Models;
-using BaseProjectDotnet.Services.LoginService.Models;
+using BaseProjectDotnet.Services.AuthService.Models;
 using BaseProjectDotnet.Services.UserService.Model;
 
 namespace BaseProjectDotnet.Services.AuthService;
 
 public class AuthServiceDAL (DatabaseContext _context): IAuthService
 {
-  public ResponseResultModel ValidateCredentials(RequestLogin requestLogin)
+  public ResponseResultModel ValidateCredentials(RequestLogin request)
   {
     var result = new ResponseResultModel();
 
@@ -17,8 +17,8 @@ public class AuthServiceDAL (DatabaseContext _context): IAuthService
     using var sqlCommand = new SqlCommand(StaticSp.StpUserAuth, sqlConnection);
     sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
 
-    sqlCommand.Parameters.AddWithValue("@Username", requestLogin.username);
-    sqlCommand.Parameters.AddWithValue("@Password", requestLogin.password);
+    sqlCommand.Parameters.AddWithValue("@Username", request.username);
+    sqlCommand.Parameters.AddWithValue("@Password", request.password);
 
     sqlConnection.Open();
 

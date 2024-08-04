@@ -7,13 +7,15 @@ public abstract class StaticSp
   public const string? StpUserChangePassword = "[dbo].[SP_UserChangePassword]";
   public const string? StpRolesIndex = "[dbo].[SP_UserRolesIndex]";
   public const string? StpRolesIndexCount = "[dbo].[SP_UserRolesIndexCount]";
-
-  public const string? StpPermissionIndex = "[dbo].[SP_UserPermissionIndex]";
-  public const string? StpPermissionIndexCount = "[dbo].[SP_UserPermissionIndexCount]";
-
   public const string? StpRolesUpsert = "[dbo].[SP_UserRolesUpsert]";
+  public const string? StpRolesDelete = "[dbo].[SP_UserRolesDelete]";
+  public const string? StpRolesRestore = "[dbo].[SP_UserRolesRestore]";
   public const string? StpRolesDetail = "[dbo].[SP_UserRolesDetail]";
   public const string? StpUserAccessList = "[dbo].[SP_UserAccessList]";
+  public const string? StpPermissionIndex = "[dbo].[SP_UserPermissionIndex]";
+  public const string? StpPermissionIndexCount = "[dbo].[SP_UserPermissionIndexCount]";
+  public const string? StpPermissionDelete = "[dbo].[SP_UserPermissionDelete]";
+  public const string? StpPermissionRestore = "[dbo].[SP_UserPermissionRestore]";
 
   // Audit Trail
   public const string? StpAuditTrailIndex = "[dbo].[SP_AuditTrailIndex]";

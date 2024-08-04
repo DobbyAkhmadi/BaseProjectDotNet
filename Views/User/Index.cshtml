@@ -18,18 +18,20 @@
   </div>
 
   <!-- init Modal -->
-  <div id="container-modal">
-    @await Html.PartialAsync("~/Views/User/Modals/ModalForm.cshtml")
-    @await Html.PartialAsync("~/Views/User/Modals/ModalDetail.cshtml")
-    @await Html.PartialAsync("~/Views/User/Modals/ModalChangePassword.cshtml")
-  </div>
+  @* <div class="row" id="user-container-modal"> *@
+  @* $1$   $2$ @await Html.PartialAsync("~/Views/User/Modals/ModalForm.cshtml") #2# #1# *@
+  @*    @await Html.PartialAsync("~/Views/User/Modals/ModalDetail.cshtml") *@
+  @* $1$   $2$ @await Html.PartialAsync("~/Views/User/Modals/ModalChangePassword.cshtml") #2# #1# *@
+  @* </div> *@
   <!--/ init Modal -->
 
   @await Html.PartialAsync("~/Views/User/Detail.cshtml")
 </div>
 <!--/ Content -->
 
-
+<div class="row" id="user-container-modal">
+  @* @await Html.PartialAsync("~/Views/User/Modals/ModalDetail.cshtml") *@
+</div>
 
 
 

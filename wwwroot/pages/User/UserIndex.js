@@ -214,8 +214,23 @@ $(document).on("click", ".add-new-user", async function (e) {
 
 $("#dataTableUser").on("click", ".item-detail", function (e) {
   e.preventDefault();
+  //ENUM View = 1, Insert = 2, Update = 3,
+  let url = "/internal/User/get-form"
   let dataId = $(this).data('id');
-  $("#user-modal-detail").modal('show');
+  let form = {
+    id: dataId,
+    type: 1
+  }
+  RequestAsync("GET", url, "html", form, function (response) {
+    if (response.success == true) {
+      console.log(response)
+      $("#user-container-modal").html(response);
+
+      $(document).ready(function (){
+        $("#user-modal-detail").modal('show');
+      });
+    }
+  }, true, true);
 });
 
 $("#dataTableUser").on("click", ".item-edit", async function (e) {
@@ -227,7 +242,7 @@ $("#dataTableUser").on("click", ".item-edit", async function (e) {
 
 $("#dataTableUser").on("click", ".item-change", function (e) {
   e.preventDefault();
- // let dataId = $(this).data('id');
+  // let dataId = $(this).data('id');
   $("#user-modal-password").modal('show');
 });
 
@@ -267,7 +282,7 @@ $("#dataTableUser").on("click", ".item-restore", function (e) {
   isConfirm('Restore Confirmation', 'Are you sure want to <b>restore</b> this data ?', confirm)
 });
 
-function initSelect2Modal(){
+function initSelect2Modal() {
   $("#Roles-Select2-Modal").select2({
     allowClear: true,
     placeholder: 'Select Item',

@@ -1,12 +1,14 @@
 ﻿using BaseProjectDotnet.Helpers.Global.Models;
 using BaseProjectDotnet.Services.MasterService;
 using BaseProjectDotnet.Services.MasterService.Modals;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BaseProjectDotnet.Controllers;
 
 [ApiController]
 [Route("/internal/[controller]")]
+[Authorize]
 public class MasterController(IMasterService _masterService) : Controller
 {
   [HttpGet("roles-select2")]

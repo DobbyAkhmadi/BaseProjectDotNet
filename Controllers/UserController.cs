@@ -1,18 +1,28 @@
-﻿using BaseProjectDotnet.Helpers.Global.Models;
+﻿using BaseProjectDotnet.Helpers.Enum;
+using BaseProjectDotnet.Helpers.Global.Models;
 using BaseProjectDotnet.Services.AuditService;
 using BaseProjectDotnet.Services.UserService;
 using BaseProjectDotnet.Services.UserService.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BaseProjectDotnet.Controllers;
 
 [ApiController]
 [Route("/internal/[controller]")]
+[Authorize]
 public class UserController(IUserService _userService, IAuditTrailService _audit) : Controller
 {
   public IActionResult Index()
   {
     return View();
+  }
+
+  [HttpGet("get-form")]
+  public IActionResult Form(string id, int type)
+  {
+    ViewBag.FormStatus = type;
+    return View("~/Views/User/Modals/ModalDetail.cshtml");
   }
 
   [HttpPost("index-post")]
@@ -85,7 +95,7 @@ public class UserController(IUserService _userService, IAuditTrailService _audit
   [Route("detail")]
   [ProducesResponseType(typeof(ResponseResultModel), 200)]
   [ProducesResponseType(500)]
-  public IActionResult Detail([FromForm] string id)
+  public IActionResult Detail(string id)
   {
     var res = new ResponseResultModel();
     try
@@ -220,6 +230,68 @@ public class UserController(IUserService _userService, IAuditTrailService _audit
     }
   }
 
+  [HttpPost]
+  [Route("Roles/delete")]
+  [ProducesResponseType(typeof(ResponseResultModel), 200)]
+  [ProducesResponseType(500)]
+  public IActionResult RolesDelete([FromForm] string id)
+  {
+    ResponseResultModel res = new ResponseResultModel();
+    try
+    {
+      if (ModelState.IsValid)
+      {
+        //    DbResponseResult oldModel = _userService.GetById(model.id);
+        res = _userService.RolesDelete(id);
+        if (res.Success)
+        {
+          //  AuditTrail.SaveAuditTrail(model, oldModel, null, "Delete Pangkalan", "PANGKALAN.DELETE", UserIdentity.IdUser.ToString(), UserIdentity.RoleName.ToString(), GroupAccessAuditTail.AuditTrailGroupAccessDDMS);
+        }
+      }
+      else
+      {
+        return BadRequest(ModelState);
+      }
+    }
+    catch (Exception ex)
+    {
+      return StatusCode(500, ex.Message);
+    }
+
+    return Ok(res);
+  }
+
+  [HttpPost]
+  [Route("Roles/restore")]
+  [ProducesResponseType(typeof(ResponseResultModel), 200)]
+  [ProducesResponseType(500)]
+  public IActionResult RolesRestore([FromForm] string id)
+  {
+    ResponseResultModel res = new ResponseResultModel();
+    try
+    {
+      if (ModelState.IsValid)
+      {
+        //    DbResponseResult oldModel = _userService.GetById(model.id);
+        res = _userService.RolesRestore(id);
+        if (res.Success)
+        {
+          //  AuditTrail.SaveAuditTrail(model, oldModel, null, "Delete Pangkalan", "PANGKALAN.DELETE", UserIdentity.IdUser.ToString(), UserIdentity.RoleName.ToString(), GroupAccessAuditTail.AuditTrailGroupAccessDDMS);
+        }
+      }
+      else
+      {
+        return BadRequest(ModelState);
+      }
+    }
+    catch (Exception ex)
+    {
+      return StatusCode(500, ex.Message);
+    }
+
+    return Ok(res);
+  }
+
   [Route("Permission")]
   public IActionResult Permission()
   {
@@ -243,5 +315,67 @@ public class UserController(IUserService _userService, IAuditTrailService _audit
         error = exception.Message
       });
     }
+  }
+
+  [HttpPost]
+  [Route("Permission/delete")]
+  [ProducesResponseType(typeof(ResponseResultModel), 200)]
+  [ProducesResponseType(500)]
+  public IActionResult PermissionDelete([FromForm] string id)
+  {
+    ResponseResultModel res = new ResponseResultModel();
+    try
+    {
+      if (ModelState.IsValid)
+      {
+        //    DbResponseResult oldModel = _userService.GetById(model.id);
+        res = _userService.PermissionDelete(id);
+        if (res.Success)
+        {
+          //  AuditTrail.SaveAuditTrail(model, oldModel, null, "Delete Pangkalan", "PANGKALAN.DELETE", UserIdentity.IdUser.ToString(), UserIdentity.RoleName.ToString(), GroupAccessAuditTail.AuditTrailGroupAccessDDMS);
+        }
+      }
+      else
+      {
+        return BadRequest(ModelState);
+      }
+    }
+    catch (Exception ex)
+    {
+      return StatusCode(500, ex.Message);
+    }
+
+    return Ok(res);
+  }
+
+  [HttpPost]
+  [Route("Permission/restore")]
+  [ProducesResponseType(typeof(ResponseResultModel), 200)]
+  [ProducesResponseType(500)]
+  public IActionResult PermissionRestore([FromForm] string id)
+  {
+    ResponseResultModel res = new ResponseResultModel();
+    try
+    {
+      if (ModelState.IsValid)
+      {
+        //    DbResponseResult oldModel = _userService.GetById(model.id);
+        res = _userService.PermissionRestore(id);
+        if (res.Success)
+        {
+          //  AuditTrail.SaveAuditTrail(model, oldModel, null, "Delete Pangkalan", "PANGKALAN.DELETE", UserIdentity.IdUser.ToString(), UserIdentity.RoleName.ToString(), GroupAccessAuditTail.AuditTrailGroupAccessDDMS);
+        }
+      }
+      else
+      {
+        return BadRequest(ModelState);
+      }
+    }
+    catch (Exception ex)
+    {
+      return StatusCode(500, ex.Message);
+    }
+
+    return Ok(res);
   }
 }

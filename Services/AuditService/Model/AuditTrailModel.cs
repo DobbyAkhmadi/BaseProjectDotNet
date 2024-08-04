@@ -16,6 +16,7 @@ public class AuditTrailDataTableModel
   public string? new_model { get; set; }
   public string? latency { get; set; }
   public DateTime? created_date { get; set; }
+  public string? type_active { get; set; }
 }
 
 
@@ -35,6 +36,7 @@ public class AuditTrailModel
   public string? new_model { get; set; }
   public string? latency { get; set; }
    public DateTime? created_date { get; set; }
+   public string? type_active { get; set; }
 }
 
 

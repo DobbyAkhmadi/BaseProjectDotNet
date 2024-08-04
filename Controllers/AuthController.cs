@@ -1,13 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using BaseProjectDotnet.Services.AuthService;
-using BaseProjectDotnet.Services.LoginService.Models;
+using BaseProjectDotnet.Services.AuthService.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BaseProjectDotnet.Controllers;
 
-public class AuthController(IConfiguration _config, IAuthService authService) : Controller
+public class AuthController(IConfiguration _config, IAuthService authService,HttpClient _httpClient) : Controller
 {
   public IActionResult Index()
   {
@@ -15,13 +15,13 @@ public class AuthController(IConfiguration _config, IAuthService authService) : 
   }
 
   [HttpPost("login-post")]
-  public IActionResult AuthLogin([FromForm] RequestLogin loginRequest)
+  public IActionResult AuthLogin([FromForm] RequestLogin request)
   {
     try
     {
       if (ModelState.IsValid)
       {
-        var res = authService.ValidateCredentials(loginRequest);
+        var res = authService.ValidateCredentials(request);
 
         if (res.Payload == "")
         {

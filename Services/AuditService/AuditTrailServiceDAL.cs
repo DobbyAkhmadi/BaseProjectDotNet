@@ -18,6 +18,7 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
     sqlCommand.Parameters.AddWithValue("@Keywords", (args.search.value ?? "").Trim());
     sqlCommand.Parameters.AddWithValue("@FromStart", args.start);
     sqlCommand.Parameters.AddWithValue("@FromEnd", args.length);
+    sqlCommand.Parameters.AddWithValue("@TypeActive", args.TypeActive);
 
     if (args.order is { Count: > 0 })
     {
@@ -59,7 +60,10 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
           latency = dataReader["latency"] != DBNull.Value ? dataReader["latency"].ToString() : string.Empty,
           created_date = dataReader["created_date"] != DBNull.Value
             ? Convert.ToDateTime(dataReader["created_date"])
-            : new DateTime()
+            : new DateTime(),
+          type_active = dataReader["type_active"] != DBNull.Value
+            ? dataReader["type_active"].ToString()
+            : string.Empty
         };
         result.Add(model);
       }
@@ -146,7 +150,10 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
           latency = dataReader["latency"] != DBNull.Value ? dataReader["latency"].ToString() : string.Empty,
           created_date = dataReader["created_date"] != DBNull.Value
             ? Convert.ToDateTime(dataReader["created_date"])
-            : new DateTime()
+            : new DateTime(),
+          type_active = dataReader["type_active"] != DBNull.Value
+            ? dataReader["type_active"].ToString()
+            : string.Empty
         };
         result = model;
       }

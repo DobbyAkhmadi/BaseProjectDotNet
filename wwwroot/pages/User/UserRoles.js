@@ -164,3 +164,40 @@ $(document).on("change", "#IsDeleted", function (e) {
 $(document).on("click",".add-new-roles",function (){
   $("#role-modal").modal('show');
 });
+
+$("#dataTableRoles").on("click", ".item-delete", function (e) {
+  e.preventDefault();
+  let url = "/internal/User/Roles/delete"
+  let dataId = $(this).data('id');
+  let form = {
+    id: dataId
+  }
+
+  confirm = function () {
+    RequestAsync("POST", url, "json", form, function (response) {
+      if (response.success == true) {
+        datatable.draw();
+      }
+    }, true, true);
+  }
+  isConfirm('Delete Confirmation', 'Are you sure want to <b>delete</b> this data ?', confirm)
+});
+
+$("#dataTableRoles").on("click", ".item-restore", function (e) {
+  e.preventDefault();
+  let url = "/internal/User/Roles/restore"
+  let dataId = $(this).data('id');
+  let form = {
+    id: dataId
+  }
+
+  confirm = function () {
+    RequestAsync("POST", url, "json", form, function (response) {
+      if (response.success == true) {
+        datatable.draw();
+      }
+    }, true, true);
+  }
+  isConfirm('Restore Confirmation', 'Are you sure want to <b>restore</b> this data ?', confirm)
+});
+

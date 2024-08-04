@@ -1,4 +1,5 @@
-$(document).ready(function () {
+
+$(document).ready(async function () {
   const menu1 = document.querySelector('#menu-1');
   if (menu1) {
     new Menu(menu1);
@@ -86,7 +87,7 @@ function isConfirm(title, content, confirm, cancel) {
 
 function headerDefaultParam() {
   // Get the JWT token from the cookie
-  let token = getCookie('JwtToken');
+  let token ;
 
   // Return the headers object
   return {
@@ -103,6 +104,7 @@ function RequestAsync(method, url, dataType, data, callback, isLoading, toast) {
     dataType: dataType,
     async: true,
   //  headers: headerDefaultParam(),
+    headers: { 'dataType': dataType },
     beforeSend: function () {
       if (isLoading) {
         startLoading();
@@ -117,8 +119,9 @@ function RequestAsync(method, url, dataType, data, callback, isLoading, toast) {
       }
     },
   }).done(function (data) {
-    if (toast) {
+    if (toast && method!=="GET") {
       showToast(data);
+
     }
     // log success
 
@@ -135,6 +138,7 @@ function RequestAsyncLogin(method, url, dataType, data, callback, isLoading, toa
     data: data,
     dataType: dataType,
     async: true,
+    headers: { 'dataType': dataType },
     beforeSend: function () {
       if (isLoading) {
         startLoading();
@@ -217,20 +221,55 @@ function convertIsDeleted(element) {
   return obj.is(':checked') ? 3 : 1;
 }
 
+function convertIsArchived(element) {
+  // Ensure the element is a jQuery object
+  const obj = $(element);
+  // Check if the element is checked
+  return obj.is(':checked') ? 5 : 1;
+}
+
+function validateField(field, helpBlock, errorMessage = '') {
+  if (!field.value.trim() || errorMessage) {
+    // show error
+    $(field).addClass('is-invalid');
+    $(helpBlock).removeClass('d-none');
+    $(helpBlock).addClass('invalid-tooltip').removeClass('valid-tooltip');
+    $(helpBlock).text(errorMessage || `The ${field.name.replace(/_/g, ' ')} field is required.`);
+    return false;
+  } else {
+    // hide error & show valid
+    $(field).removeClass('is-invalid');
+    $(helpBlock).addClass('d-none');
+    $(helpBlock).removeClass('invalid-tooltip').addClass('valid-tooltip');
+    $(helpBlock).text('');
+    return true;
+  }
+}
 function responseError(xhr) {
   switch (xhr.status) {
-    // case 400:
-    //     window.location.href = '/internal/Home/Error?statusCode=400'; // Redirect to unauthorized page
-    //   break;
+    // handle bad request
+    case 400:
+      const errors = xhr.responseJSON;
+      for (const [fieldName, messages] of Object.entries(errors)) {
+        const fieldElement = document.querySelector(`[name="${fieldName}"]`);
+        const helpBlock = document.querySelector(`#${fieldName}-help-block`);
+        if (fieldElement && helpBlock) {
+          validateField(fieldElement, helpBlock, messages[0]); // Display the first error message
+          // Add an event listener to the field to validate on input
+          fieldElement.addEventListener('input', () => {
+            validateField(fieldElement, helpBlock);
+          });
+        }
+      }
+      break;
+    case 403:
+      window.location.href = '/internal/Home/Error?statusCode=403'; // Redirect to unauthorized page
+      break;
     case 401:
       window.location.href = '/internal/Home/Error?statusCode=401'; // Redirect to unauthorized page
       break;
-    default:
-      window.location.href = '/internal/Home/Error?statusCode=500'; // Redirect to unauthorized page
-      break;
   }
 }
-
 function isAlert(title, content) {
   $.alert({
     title: title,
@@ -243,12 +282,4 @@ function isAlert(title, content) {
       }
     }
   });
-}
-
-
-// Helper function to get a cookie value by name
-function getCookie(name) {
-  let value = "; " + document.cookie;
-  let parts = value.split("; " + name + "=");
-  if (parts.length === 2) return parts.pop().split(";").shift();
 }

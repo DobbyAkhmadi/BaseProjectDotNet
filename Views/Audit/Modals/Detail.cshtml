@@ -1,0 +1,80 @@
+﻿<!-- Modal -->
+<div class="modal fade" id="audit-modal-detail" tabindex="-1">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Audit Detail</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row form-description">
+
+          <div class="col-4 mb-4">
+            <label class="form-label"><strong>User</strong></label>
+            <div class="input-group input-group-merge">
+              <div class="form-description user_name"></div>
+            </div>
+          </div>
+
+          <div class="col-4 mb-4">
+            <label class="form-label"><strong>Remote IP</strong></label>
+            <div class="input-group input-group-merge">
+              <div class="form-description remote_ip"></div>
+            </div>
+          </div>
+
+          <div class="col-4 mb-4">
+            <label class="form-label"><strong>Session ID</strong></label>
+            <div class="input-group input-group-merge">
+              <div class="form-description session_id"></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="row form-description">
+
+          <div class="col-xl-4 col-md-6 col-sm-12 mb-6">
+            <label class="form-label"><strong>Action</strong></label>
+            <div class="input-group input-group-merge">
+              <div class="form-description action"></div>
+            </div>
+          </div>
+
+          <div class="col-xl-4 col-md-6 col-sm-12 mb-6">
+            <label class="form-label"><strong>Function Name</strong></label>
+            <div class="input-group input-group-merge">
+              <div class="form-description function_name"></div>
+            </div>
+          </div>
+
+          <div class="col-4 mb-4">
+            <label class="form-label"><strong>Latency (ms)</strong></label>
+            <div class="input-group input-group-merge">
+              <div class="form-description latency"></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="row form-description">
+          <div class="col-6 mb-4">
+            <label class="form-label"><strong>New Model (JSON)</strong></label>
+            <textarea rows="3" class="form-control new_model" style="height:500px" autofocus readonly></textarea>
+          </div>
+          <div class="col-6 mb-4">
+            <label class="form-label"><strong>Old Model (JSON)</strong></label>
+            <textarea rows="3" class="form-control old_model" style="height:500px" autofocus readonly></textarea>
+          </div>
+        </div>
+        <div class="row form-description">
+          <div class="col-6 mb-4">
+            <label class="form-label"><strong>Created Date</strong></label>
+            <div class="input-group input-group-merge">
+              <div class="form-description created_date"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

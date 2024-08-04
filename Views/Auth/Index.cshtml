@@ -1,6 +1,6 @@
 @{
-  ViewData["isNavbar"] =  false;
-  ViewData["isMenu"] =  false;
+  ViewData["isNavbar"] = false;
+  ViewData["isMenu"] = false;
 }
 <!-- Content -->
 <div class="authentication-wrapper authentication-inner">
@@ -22,41 +22,46 @@
     <!-- Login -->
     <div class="d-flex col-12 col-lg-4 align-items-center authentication-bg p-sm-12 p-6">
 
-        <div class="w-px-400 mx-auto mt-12 pt-5">
-          <h4 class="mb-1">Welcome to Internal System! 👋</h4>
-          <p class="mb-6">Please sign in to your account</p>
+      <div class="w-px-400 mx-auto mt-12 pt-5">
+        <h4 class="mb-1">Welcome to Internal System! 👋</h4>
+        <p class="mb-6">Please sign in to your account</p>
 
-          <div class="mb-6">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" name="username" placeholder="Enter your email or username" autofocus required/>
-            <div id="username-help" class="help-block text-danger"></div>
-          </div>
+        <div class="position-relative mb-6">
+          <label class="form-label" for="username">User Name</label>
+          <input type="text" id="username" name="username"
+                 class="form-control" placeholder="Enter your username"/>
+          <div id="username-help-block" class="d-none"></div>
+        </div>
 
-          <div class="mb-6 form-password-toggle">
-            <label class="form-label" for="password">Password</label>
-            <div class="input-group input-group-merge">
-              <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" autofocus required/>
-              <div id="password-help" class="help-block text-danger"></div>
-
-              <span class="input-group-text cursor-pointer">
+        <div class="mb-6 form-password-toggle">
+          <label class="form-label" for="password">Password</label>
+          <div class="input-group input-group-merge">
+            <input type="password" class="form-control"
+                   id="password"
+                   name="password"
+                   placeholder="Enter your password" />
+            <div id="password-help-block" class="d-none"></div>
+            <span class="input-group-text cursor-pointer">
               <i class="ti ti-eye-off"></i>
             </span>
-            </div>
           </div>
-
-          <div class="my-8">
-            <div class="d-flex justify-content-between">
-              <div class="form-check mb-0 ms-2">
-                <input class="form-check-input" type="checkbox" id="remember-me"/>
-                <label class="form-check-label" for="remember-me"> Remember Me </label>
-              </div>
-              <a href="#">
-                <p class="mb-0">Forgot Password?</p>
-              </a>
-            </div>
-          </div>
-          <button class="btn btn-primary d-grid w-100 btnLogin">Sign in</button>
         </div>
+
+        <div class="my-8">
+          <div class="d-flex justify-content-between">
+            <div class="form-check mb-0 ms-2">
+              <input class="form-check-input" type="checkbox" id="remember-me"/>
+              <label class="form-check-label" for="remember-me"> Remember Me </label>
+            </div>
+            <a href="#">
+              <p class="mb-0">Forgot Password?</p>
+            </a>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary d-grid w-100 btnLogin">Sign in</button>
+
+      </div>
 
     </div>
     <!-- /Login -->

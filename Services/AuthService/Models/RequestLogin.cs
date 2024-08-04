@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BaseProjectDotnet.Services.LoginService.Models;
+namespace BaseProjectDotnet.Services.AuthService.Models;
 
 public class RequestLogin
 {

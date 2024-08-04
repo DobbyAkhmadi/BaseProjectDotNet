@@ -333,12 +333,128 @@ public class UserServiceData(DatabaseContext _context) : IUserService
     return result;
   }
 
+  public ResponseResultModel PermissionDelete(string id)
+  {
+    ResponseResultModel resultModel = new();
+
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpPermissionDelete, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+
+    sqlCommand.Parameters.AddWithValue("@ID", id);
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
+    {
+      while (dataReader.Read())
+      {
+        resultModel.Success = Convert.ToBoolean(dataReader["Code"]);
+        resultModel.Message = dataReader["Message"].ToString();
+        resultModel.Payload = dataReader["Payload"].ToString();
+      }
+
+      dataReader.Close();
+    }
+
+    sqlConnection.Close();
+
+    return resultModel;
+  }
+
+  public ResponseResultModel RolesDelete(string id)
+  {
+    ResponseResultModel resultModel = new();
+
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpRolesDelete, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+
+    sqlCommand.Parameters.AddWithValue("@ID", id);
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
+    {
+      while (dataReader.Read())
+      {
+        resultModel.Success = Convert.ToBoolean(dataReader["Code"]);
+        resultModel.Message = dataReader["Message"].ToString();
+        resultModel.Payload = dataReader["Payload"].ToString();
+      }
+
+      dataReader.Close();
+    }
+
+    sqlConnection.Close();
+
+    return resultModel;
+  }
+
   public ResponseResultModel Delete(string id)
   {
     ResponseResultModel resultModel = new();
 
     using var sqlConnection = _context.DConnection1();
     using var sqlCommand = new SqlCommand(StaticSp.StpUserDelete, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+
+    sqlCommand.Parameters.AddWithValue("@ID", id);
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
+    {
+      while (dataReader.Read())
+      {
+        resultModel.Success = Convert.ToBoolean(dataReader["Code"]);
+        resultModel.Message = dataReader["Message"].ToString();
+        resultModel.Payload = dataReader["Payload"].ToString();
+      }
+
+      dataReader.Close();
+    }
+
+    sqlConnection.Close();
+
+    return resultModel;
+  }
+
+  public ResponseResultModel RolesRestore(string id)
+  {
+    ResponseResultModel resultModel = new();
+
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpRolesRestore, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+
+    sqlCommand.Parameters.AddWithValue("@ID", id);
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
+    {
+      while (dataReader.Read())
+      {
+        resultModel.Success = Convert.ToBoolean(dataReader["Code"]);
+        resultModel.Message = dataReader["Message"].ToString();
+        resultModel.Payload = dataReader["Payload"].ToString();
+      }
+
+      dataReader.Close();
+    }
+
+    sqlConnection.Close();
+
+    return resultModel;
+  }
+
+  public ResponseResultModel PermissionRestore(string id)
+  {
+    ResponseResultModel resultModel = new();
+
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpPermissionRestore, sqlConnection);
     sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
 
     sqlCommand.Parameters.AddWithValue("@ID", id);
