@@ -5,6 +5,28 @@
       context: .
       dockerfile: Dockerfile
 
+  portainer:
+    image: portainer/portainer:latest
+    container_name: portainer
+    command: -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    ports:
+      - "9001:9000"
+
+  sonarqube:
+    image: sonarqube:latest
+    container_name: code-coverage-sonarqube
+    environment:
+      - SONAR_JDBC_URL=jdbc:sqlserver://sqlserver:1433;databaseName=CodeCoverage
+      - SONAR_JDBC_USERNAME=sa
+      - SONAR_JDBC_PASSWORD=asdf1234A
+    ports:
+      - "9000:9000"
+    depends_on:
+      - mssql-2022
+
   mssql-2022:
     container_name: db-sql-server
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -21,3 +43,6 @@
       - ./Docker/log:/var/opt/mssql/log
       - ./Docker/secrets:/var/opt/mssql/secrets
       - ./Docker/backup:/var/opt/mssql/backup
+
+volumes:
+  portainer_data:
