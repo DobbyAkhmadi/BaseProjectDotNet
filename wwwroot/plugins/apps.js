@@ -1,4 +1,3 @@
-
 $(document).ready(async function () {
   const menu1 = document.querySelector('#menu-1');
   if (menu1) {
@@ -87,7 +86,7 @@ function isConfirm(title, content, confirm, cancel) {
 
 function headerDefaultParam() {
   // Get the JWT token from the cookie
-  let token ;
+  let token;
 
   // Return the headers object
   return {
@@ -103,75 +102,7 @@ function RequestAsync(method, url, dataType, data, callback, isLoading, toast) {
     data: data,
     dataType: dataType,
     async: true,
-  //  headers: headerDefaultParam(),
-    headers: { 'dataType': dataType },
-    beforeSend: function () {
-      if (isLoading) {
-        startLoading();
-      }
-    },
-    success: callback,
-    error: function (xhr) {
-      if (isLoading) {
-        endLoading();
-        // log failed
-        responseError(xhr);
-      }
-    },
-  }).done(function (data) {
-    if (toast && method!=="GET") {
-      showToast(data);
-
-    }
-    // log success
-
-    if (isLoading) {
-      endLoading();
-    }
-  });
-}
-
-function RequestAsyncLogin(method, url, dataType, data, callback, isLoading, toast) {
-  $.ajax({
-    type: method,
-    url: url,
-    data: data,
-    dataType: dataType,
-    async: true,
-    headers: { 'dataType': dataType },
-    beforeSend: function () {
-      if (isLoading) {
-        startLoading();
-      }
-    },
-    success: callback,
-    error: function (xhr) {
-      if (isLoading) {
-        endLoading();
-        // log failed
-        responseError(xhr);
-      }
-    },
-  }).done(function (data) {
-    if (toast) {
-      showToast(data);
-    }
-    // log success
-
-    if (isLoading) {
-      endLoading();
-    }
-  });
-}
-
-function APIRequestAsync(method, url, dataType, data, callback, isLoading, toast, isSaveLog) {
-  let methodList = ['PUT', 'POST', 'PATCH', 'DELETE']
-  $.ajax({
-    type: method,
-    url: url,
-    data: data,
-    dataType: dataType,
-    async: true,
+    //  headers: headerDefaultParam(),
     headers: {'dataType': dataType},
     beforeSend: function () {
       if (isLoading) {
@@ -183,28 +114,17 @@ function APIRequestAsync(method, url, dataType, data, callback, isLoading, toast
       if (isLoading) {
         endLoading();
         // log failed
-        if (isSaveLog) {
-          if (method.contains(methodList)) {
-            // exec method log audit
-
-          }
-        }
+        responseError(xhr);
       }
     },
   }).done(function (data) {
-    if (toast) {
+    formValid()
+    if (toast && method !== "GET") {
       showToast(data);
     }
-
+    // log success
     if (isLoading) {
       endLoading();
-    }
-
-    if (isSaveLog) {
-      if (method.contains(methodList)) {
-        // exec method log audit
-
-      }
     }
   });
 }
@@ -233,32 +153,43 @@ function validateField(field, helpBlock, errorMessage = '') {
     // show error
     $(field).addClass('is-invalid');
     $(helpBlock).removeClass('d-none');
-    $(helpBlock).addClass('invalid-tooltip').removeClass('valid-tooltip');
-    $(helpBlock).text(errorMessage || `The ${field.name.replace(/_/g, ' ')} field is required.`);
+    $(helpBlock)
+      .addClass('invalid-tooltip')
+      .removeClass('valid-tooltip');
+    $(helpBlock).text(errorMessage);
     return false;
   } else {
     // hide error & show valid
     $(field).removeClass('is-invalid');
     $(helpBlock).addClass('d-none');
-    $(helpBlock).removeClass('invalid-tooltip').addClass('valid-tooltip');
+    $(helpBlock)
+      .removeClass('invalid-tooltip')
+      .addClass('valid-tooltip');
     $(helpBlock).text('');
     return true;
   }
 }
+
+function formValid() {
+  // Clear validation states and messages for form controls
+  $('.form-control').removeClass('is-invalid');
+  $('.help-block')
+    .removeClass('invalid-tooltip d-block')
+    .addClass('valid-tooltip')
+    .text('');
+}
+
 function responseError(xhr) {
   switch (xhr.status) {
     // handle bad request
     case 400:
+      formValid();
       const errors = xhr.responseJSON;
       for (const [fieldName, messages] of Object.entries(errors)) {
-        const fieldElement = document.querySelector(`[name="${fieldName}"]`);
+        const fieldElement = document.querySelector(`#${fieldName}`);
         const helpBlock = document.querySelector(`#${fieldName}-help-block`);
         if (fieldElement && helpBlock) {
           validateField(fieldElement, helpBlock, messages[0]); // Display the first error message
-          // Add an event listener to the field to validate on input
-          fieldElement.addEventListener('input', () => {
-            validateField(fieldElement, helpBlock);
-          });
         }
       }
       break;
@@ -270,13 +201,14 @@ function responseError(xhr) {
       break;
     default:
       let data = {
-        success : false,
-        message : xhr.responseJSON
+        success: false,
+        message: xhr.responseJSON
       }
       showToast(data);
       break;
   }
 }
+
 function isAlert(title, content) {
   $.alert({
     title: title,

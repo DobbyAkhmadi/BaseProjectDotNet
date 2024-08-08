@@ -48,6 +48,7 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
           user_name = dataReader["user_name"] != DBNull.Value ? dataReader["user_name"].ToString() : string.Empty,
           role_id = dataReader["role_id"] != DBNull.Value ? dataReader["role_id"].ToString() : string.Empty,
           role_name = dataReader["role_name"] != DBNull.Value ? dataReader["role_name"].ToString() : string.Empty,
+          audit_type = dataReader["audit_type"] != DBNull.Value ? dataReader["audit_type"].ToString() : string.Empty,
           remote_ip = dataReader["remote_ip"] != DBNull.Value ? dataReader["remote_ip"].ToString() : string.Empty,
           session_id = dataReader["session_id"] != DBNull.Value ? dataReader["session_id"].ToString() : string.Empty,
           action = dataReader["action"] != DBNull.Value ? dataReader["action"].ToString() : string.Empty,
@@ -110,9 +111,41 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
     return result;
   }
 
-  public ResponseResultModel SaveAudit(AuditTrailModel auditTrailModel)
+  public ResponseResultModel SaveAudit(AuditTrailModel model)
   {
-    return null;
+    ResponseResultModel resultModel = new();
+    using var sqlConnection = _context.DConnection1();
+    using var sqlCommand = new SqlCommand(StaticSp.StpAuditTrailCreate, sqlConnection);
+    sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+
+    sqlCommand.Parameters.AddWithValue("@User_ID", model.user_id);
+    sqlCommand.Parameters.AddWithValue("@Role_ID", model.role_id);
+    sqlCommand.Parameters.AddWithValue("@Audit_Type", model.audit_type);
+    sqlCommand.Parameters.AddWithValue("@Remote_IP", model.remote_ip);
+    sqlCommand.Parameters.AddWithValue("@Session_ID", model.session_id);
+    sqlCommand.Parameters.AddWithValue("@Function_Name", model.function_name);
+    sqlCommand.Parameters.AddWithValue("@Message", model.function_name);
+    sqlCommand.Parameters.AddWithValue("@Old_Model", model.old_model);
+    sqlCommand.Parameters.AddWithValue("@New_Model", model.new_model);
+    sqlCommand.Parameters.AddWithValue("@Latency", model.latency);
+
+    sqlConnection.Open();
+
+    using (var dataReader = sqlCommand.ExecuteReader())
+    {
+      while (dataReader.Read())
+      {
+        resultModel.Success = Convert.ToBoolean(dataReader["Code"]);
+        resultModel.Message = dataReader["Message"].ToString();
+        resultModel.Payload = dataReader["Payload"].ToString();
+      }
+
+      dataReader.Close();
+    }
+
+    sqlConnection.Close();
+
+    return resultModel;
   }
 
   public AuditTrailModel GetById(string id)
@@ -138,6 +171,7 @@ public class AuditTrailServiceData(DatabaseContext _context) : IAuditTrailServic
           user_name = dataReader["user_name"] != DBNull.Value ? dataReader["user_name"].ToString() : string.Empty,
           role_id = dataReader["role_id"] != DBNull.Value ? dataReader["role_id"].ToString() : string.Empty,
           role_name = dataReader["role_name"] != DBNull.Value ? dataReader["role_name"].ToString() : string.Empty,
+          audit_type = dataReader["audit_type"] != DBNull.Value ? dataReader["audit_type"].ToString() : string.Empty,
           remote_ip = dataReader["remote_ip"] != DBNull.Value ? dataReader["remote_ip"].ToString() : string.Empty,
           session_id = dataReader["session_id"] != DBNull.Value ? dataReader["session_id"].ToString() : string.Empty,
           action = dataReader["action"] != DBNull.Value ? dataReader["action"].ToString() : string.Empty,

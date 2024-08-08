@@ -19,6 +19,16 @@ public class AuthController(IConfiguration _config, IAuthService authService,Htt
   {
     try
     {
+      if (string.IsNullOrEmpty(request.username))
+      {
+        ModelState.AddModelError(nameof(request.username), "This field is required.");
+      }
+
+      if (string.IsNullOrEmpty(request.password))
+      {
+        ModelState.AddModelError(nameof(request.password), "This field is required.");
+      }
+
       if (ModelState.IsValid)
       {
         var res = authService.ValidateCredentials(request);

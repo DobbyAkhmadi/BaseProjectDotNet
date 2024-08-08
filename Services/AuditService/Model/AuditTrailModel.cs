@@ -7,6 +7,7 @@ public class AuditTrailDataTableModel
   public string? user_name { get; set; }
   public string? role_id { get; set; }
   public string? role_name { get; set; }
+  public string? audit_type { get; set; }
   public string? remote_ip { get; set; }
   public string? session_id { get; set; }
   public string? action { get; set; }
@@ -19,7 +20,6 @@ public class AuditTrailDataTableModel
   public string? type_active { get; set; }
 }
 
-
 public class AuditTrailModel
 {
   public string? id { get; set; }
@@ -27,6 +27,7 @@ public class AuditTrailModel
   public string? user_name { get; set; }
   public string? role_id { get; set; }
   public string? role_name { get; set; }
+  public string? audit_type { get; set; }
   public string? remote_ip { get; set; }
   public string? session_id { get; set; }
   public string? action { get; set; }
@@ -35,8 +36,6 @@ public class AuditTrailModel
   public string? old_model { get; set; }
   public string? new_model { get; set; }
   public string? latency { get; set; }
-   public DateTime? created_date { get; set; }
-   public string? type_active { get; set; }
+  public DateTime? created_date { get; set; }
+  public string? type_active { get; set; }
 }
-
-

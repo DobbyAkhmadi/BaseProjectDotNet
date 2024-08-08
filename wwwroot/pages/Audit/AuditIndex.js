@@ -37,6 +37,23 @@ function initDataTable() {
     columns: [
       {"data": "user_name"},
       {"data": "role_name"},
+      {
+        "data": "audit_type",
+        'className': 'text-center',
+        'render': function (data, type, item, meta) {
+          let action = "<div class='card-action'>";
+
+          // 1 Log | 2 Auth
+          if (data == "1") {
+            action += "<span class='badge rounded-pill bg-label-success'>LOG</span>";
+          } else if (data == "2") {
+            action += "<span class='badge rounded-pill bg-label-primary'>AUTH</span>";
+          }
+          action += "</div>";
+
+          return action;
+        }
+      },
       {"data": "remote_ip"},
       {"data": "action"},
       {"data": "function_name"},
@@ -188,6 +205,7 @@ $("#dataTableAudit").on("click", ".item-detail", function (e) {
   }
   RequestAsync("GET", url, "json", form, function (response) {
     let payload = response.payload;
+    console.log(payload)
     if (response.success == true) {
       for (const [key, value] of Object.entries(payload)) {
         $("." + key).text(value ? value : "-");
